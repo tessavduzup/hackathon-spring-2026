@@ -15,7 +15,7 @@ API.interceptors.request.use((config) => {
 
 export async function deleteKey(id) {
     try {
-        const response = await API.delete($`api/keys/${id}/delete/`);
+        const response = await API.delete(`api/keys/${id}/delete/`);
         return response
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка при удалении ключа')

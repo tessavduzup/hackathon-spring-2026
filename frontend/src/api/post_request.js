@@ -22,8 +22,6 @@ export async function loginUser(_email, _password) {
         const jsonUserData = JSON.stringify(userData)
         const response = await API.post('api/login/', jsonUserData);
 
-        console.log(response)
-
         if (response.data.access && response.data.refresh) {
             localStorage.setItem('access', response.data.access);
             localStorage.setItem('refresh', response.data.refresh);
