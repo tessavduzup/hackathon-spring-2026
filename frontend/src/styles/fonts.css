@@ -1,0 +1,37 @@
+/* Подключение кастомного шрифта */
+@font-face {
+  font-family: 'PTSans';
+  src: url('../assets/fonts/PTSans-Regular.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PTSans';
+  src: url('../assets/fonts/PTSans-Italic.ttf') format('ttf');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PTSans';
+  src: url('../assets/fonts/PTSans-Bold.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'PTSans';
+  src: url('../assets/fonts/PTSans-BoldItalic.ttf') format('ttf');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Применение шрифта */
+body {
+  font-family: 'PTSans', sans-serif;
+}

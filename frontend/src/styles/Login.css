@@ -1,0 +1,72 @@
+#loginForm{
+  max-width: 500px;
+}
+
+div:has(> form){
+  width: min(100%, 420px);
+  margin: 40px auto;
+  padding: 28px;
+  background: #fff;
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 18px 50px rgba(17,24,39,.08);
+}
+
+div:has(> form) > h1{
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: .2px;
+  margin: 0 0 20px;
+}
+
+.submitSuccess, .submitErrors{
+  margin: 0 0 14px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  border: 1px solid;
+}
+.submitSuccess{ background:#f0fdf4; color:#166534; border-color:#bbf7d0; }
+.submitErrors{ background:#fef2f2; color:#991b1b; border-color:#fecaca; }
+
+form{ display: grid; gap: 14px; }
+
+/* Инпуты без классов */
+form input[type="text"],
+form input[type="email"],
+form input[type="password"]{
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--text);
+  outline: none;
+  transition: border-color .15s, box-shadow .15s;
+}
+form input:focus{
+  border-color: var(--purple);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--purple) 18%, transparent);
+}
+
+div:has(> form) > h4{
+  margin: 16px 0 6px;
+  font-size: 14px;
+  color: var(--muted);
+}
+div:has(> form) > a{
+  color: var(--purple);
+  font-weight: 600;
+  text-decoration: none;
+}
+div:has(> form) > a:hover{
+  color: var(--orange);
+  text-decoration: underline;
+}
+
+/* Адаптив */
+@media (max-width: 480px){
+  div:has(> form){ margin: 40px auto; padding: 22px; }
+  div:has(> form) > h1{ font-size: 24px; }
+}
