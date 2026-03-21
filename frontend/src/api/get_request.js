@@ -14,10 +14,18 @@ API.interceptors.request.use((config) => {
 
 export async function getKey() {
     try {
-        const jsonUserData = JSON.stringify(userData)
-        const response = await API.get('/users/getKey/', jsonUserData);
+        const response = await API.get('/users/getKey/');
         return response
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка при генерации ключа')
+    }
+}
+
+export async function fetchUser() {
+    try {
+        const response = await API.get('/api/profile/')
+        return response
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Пользователь не найден')
     }
 }

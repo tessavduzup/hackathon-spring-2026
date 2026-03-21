@@ -100,25 +100,28 @@ function Dashboard() {
   }, [isActive, key]);
 
   const handleLogoutClick = () => {
-    logout();
-    localStorage.removeItem('activeKey');
-    localStorage.removeItem('keyExpiry');
-    
+    logout();    
     navigate('/login')
-    toast.success('Выход выполнен');
+  };
+  const handleRegisterClick = () => {
+    navigate('/register')
+    toast.success('Приступайте к регистрации!');
   };
 
   return (
     <div className="dashboard">
       <div className="dashboard-header">
         <div className="user-info">
-          <h2>👋 Добро пожаловать{user ? `, ${user.name} ${user.middle_name}` : ''}!</h2>
+          <h2>👋 Добро пожаловать{user ? `, ${user.full_name}` : ''}!</h2>
           {user && <p className="user-email">{user.email}</p>}
-          {user && <p className="user-email">{user.role}</p>}
+          {user && <p className={user.role === 1 ? "user-role-admin" : '"user-role-staff"'}>{user.role === 1 ? "Администратор" : "Сотрудник"}</p>}
 
         </div>
         <button onClick={handleLogoutClick} className="logout-btn">
           Выйти
+        </button>
+        <button onClick={handleRegisterClick} className="logout-btn">
+          Регистрация
         </button>
       </div>
 

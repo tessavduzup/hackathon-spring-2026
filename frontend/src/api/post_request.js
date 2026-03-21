@@ -9,6 +9,7 @@ API.interceptors.request.use((config) => {
     if (token) {
         config.headers.Authorization = `Bearer ${token}`
     }
+    config.headers['Content-Type'] = 'application/json'
     return config
 })
 
@@ -19,7 +20,7 @@ export async function loginUser(_email, _password) {
             password: _password
         }
         const jsonUserData = JSON.stringify(userData)
-        const response = await API.post('/login', jsonUserData);
+        const response = await API.post('api/login/', jsonUserData);
         console.log(response)
         return response
     } catch (error) {
@@ -30,10 +31,21 @@ export async function loginUser(_email, _password) {
 export async function registerUser(userData) {
     try {
         const jsonUserData = JSON.stringify(userData)
-        const response = await API.post('/users/create/', jsonUserData);
+        const response = await API.post('api/users/create/', jsonUserData);
         console.log(response)
         return response;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка регистрации');
+    }
+}
+
+export async function logoutUser(refresh_token) {
+    try {
+        const jsonUserData = JSON.stringify({'refresh': refresh_token})
+        const response = await API.post('api/logout/', jsonUserData);
+        console.log(response)
+        return response
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Ошибка авторизации')
     }
 }

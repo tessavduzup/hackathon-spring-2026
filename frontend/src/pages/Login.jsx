@@ -11,7 +11,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [isSend, setIsSend] = useState(false)
   const navigate = useNavigate();
-  const {login} = useAuth()
+  const {login, isAuthenticated} = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,6 +25,7 @@ function Login() {
     try {
       setIsSend(true)
       const response = await login(email, password)
+      console.log(response)
       if (response.success) {
         toast.success('Добро пожаловать!');
         navigate('/dashboard');
