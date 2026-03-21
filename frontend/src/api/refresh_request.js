@@ -5,7 +5,7 @@ const API = axios.create({
 })
 
 API.interceptors.request.use((config) => {
-    const token = localStorage.getItem('refresh')
+    const token = localStorage.getItem('access')
     if (token) {
         config.headers.Authorization = `Bearer ${token}`
     }
@@ -15,8 +15,7 @@ API.interceptors.request.use((config) => {
 
 export async function logoutUser(refresh_token) {
     try {
-        const jsonUserData = JSON.stringify({'refresh': refresh_token})
-        const response = await API.post('api/logout/', jsonUserData);
+        const response = await API.post('api/logout/', {'refresh': refresh_token});
         console.log(response)
         return response
     } catch (error) {

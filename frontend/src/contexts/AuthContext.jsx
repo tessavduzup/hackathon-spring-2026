@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('refresh')
     try {
       const response = await logoutUser(token)
-      if (response.success) {
+      if (response.data.success) {
         if (localStorage.getItem('activeKey')) {
           try {
             const response = deleteKey(user.id)

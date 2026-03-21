@@ -67,7 +67,7 @@ class LogoutView(APIView):
                 token.blacklist()
             return Response({'success': True, 'message': 'Успешный выход'}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'success': False, 'error': str(e.print_with_stacktrace())}, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView(APIView):
     """
@@ -467,6 +467,7 @@ class KeyCreateView(APIView):
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+#@csrf_exempt
 @require_http_methods(["DELETE"])
 def key_delete(request: HttpRequest, key_id: int):
     try:
