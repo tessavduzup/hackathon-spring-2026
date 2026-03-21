@@ -2,38 +2,53 @@ import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
 import '../styles/Dashboard.css';
+import { useAuth } from '../contexts/AuthContext';
+import { getKey } from '../api/get_request';
+import { ERROR_MESSAGE_TIME } from '../utils/DefaultValues';
+import { useNavigate } from 'react-router-dom';
 
-function Dashboard({ user, onLogout }) {
-  const [qrKey, setQrKey] = useState(null);
+function Dashboard() {
+  const [key, setKey] = useState(null)
   const [timeLeft, setTimeLeft] = useState(null);
   const [isActive, setIsActive] = useState(false);
+  const [isGenerate, setIsGenerate] = useState(false)
+  const [error, setError] = useState('')
 
-  // Генерация случайного ключа
-  const generateKey = () => {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let key = '';
-    for (let i = 0; i < 32; i++) {
-      key += chars.charAt(Math.floor(Math.random() * chars.length));
+  const {user, logout} = useAuth()
+  const navigate = useNavigate()
+
+  const generateQRCode = async () => {
+    if (isActive) {
+      localStorage.removeItem('activeKey');
+      localStorage.removeItem('keyExpiry');
+      setIsActive(false)
     }
-    return key;
+
+    try {
+      setIsGenerate(true)
+      const response = await getKey()
+      if (response.success) {
+        setKey(response.data.key)
+        const expiryTime = Date.now() + 5 * 60 * 1000;
+        setIsActive(true);
+        
+        localStorage.setItem('activeKey', key);
+        localStorage.setItem('keyExpiry', expiryTime);
+        
+        toast.success('QR-код сгенерирован! Активен 5 минут');
+      } 
+      else {
+        throw new Error('Ошибка при генерации ключа')
+      }
+    } catch (error) {
+      toast.error('Ошибка при генерации ключа', {duration: ERROR_MESSAGE_TIME})
+    } finally {
+      setTimeout(() => {
+        setIsGenerate(false)
+      }, ERROR_MESSAGE_TIME)
+    }
   };
 
-  // Генерация QR-кода
-  const generateQRCode = () => {
-    const newKey = generateKey();
-    const expiryTime = Date.now() + 5 * 60 * 1000; // 5 минут
-    
-    setQrKey(newKey);
-    setIsActive(true);
-    
-    // Сохраняем в localStorage
-    localStorage.setItem('activeKey', newKey);
-    localStorage.setItem('keyExpiry', expiryTime);
-    
-    toast.success('QR-код сгенерирован! Активен 5 минут');
-  };
-
-  // Проверка активности ключа
   useEffect(() => {
     const savedKey = localStorage.getItem('activeKey');
     const savedExpiry = localStorage.getItem('keyExpiry');
@@ -41,25 +56,23 @@ function Dashboard({ user, onLogout }) {
     if (savedKey && savedExpiry) {
       const now = Date.now();
       if (now < parseInt(savedExpiry)) {
-        setQrKey(savedKey);
+        setKey(savedKey);
         setIsActive(true);
       } else {
-        // Ключ истек
         localStorage.removeItem('activeKey');
         localStorage.removeItem('keyExpiry');
       }
     }
   }, []);
 
-  // Таймер обратного отсчета
   useEffect(() => {
-    if (!isActive || !qrKey) return;
+    if (!isActive || !key) return;
 
     const interval = setInterval(() => {
       const expiry = localStorage.getItem('keyExpiry');
       if (!expiry) {
         setIsActive(false);
-        setQrKey(null);
+        setKey(null);
         setTimeLeft(null);
         clearInterval(interval);
         return;
@@ -69,9 +82,8 @@ function Dashboard({ user, onLogout }) {
       const remaining = parseInt(expiry) - now;
       
       if (remaining <= 0) {
-        // Время истекло
         setIsActive(false);
-        setQrKey(null);
+        setKey(null);
         setTimeLeft(null);
         localStorage.removeItem('activeKey');
         localStorage.removeItem('keyExpiry');
@@ -85,10 +97,14 @@ function Dashboard({ user, onLogout }) {
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [isActive, qrKey]);
+  }, [isActive, key]);
 
   const handleLogoutClick = () => {
-    onLogout();
+    logout();
+    localStorage.removeItem('activeKey');
+    localStorage.removeItem('keyExpiry');
+    
+    navigate('/login')
     toast.success('Выход выполнен');
   };
 
@@ -96,18 +112,21 @@ function Dashboard({ user, onLogout }) {
     <div className="dashboard">
       <div className="dashboard-header">
         <div className="user-info">
-          <h2>👋 Добро пожаловать, {user.name}!</h2>
-          <p className="user-email">{user.email}</p>
+          <h2>👋 Добро пожаловать{user ? `, ${user.name} ${user.middle_name}` : ''}!</h2>
+          {user && <p className="user-email">{user.email}</p>}
+          {user && <p className="user-email">{user.role}</p>}
+
         </div>
         <button onClick={handleLogoutClick} className="logout-btn">
           Выйти
         </button>
       </div>
 
+      {error && <div className="error-message">{error}</div>}
       <div className="qr-container">
         {!isActive ? (
           <div className="qr-placeholder">
-            <button onClick={generateQRCode} className="generate-btn">
+            <button onClick={generateQRCode} className="generate-btn" disabled={isGenerate}>
               🔘 Сгенерировать QR-код
             </button>
             <p className="info-text">
@@ -118,7 +137,7 @@ function Dashboard({ user, onLogout }) {
           <div className="qr-active">
             <div className="qr-code">
               <QRCodeSVG 
-                value={qrKey} 
+                value={key} 
                 size={250}
                 bgColor="#ffffff"
                 fgColor="#000000"
@@ -131,22 +150,10 @@ function Dashboard({ user, onLogout }) {
               <div className="timer">
                 ⏱️ Осталось времени: <strong>{timeLeft}</strong>
               </div>
-              <div className="key-value">
-                <span className="key-label">Ключ:</span>
-                <code>{qrKey}</code>
-                <button 
-                  onClick={() => {
-                    navigator.clipboard.writeText(qrKey);
-                    toast.success('Ключ скопирован!');
-                  }}
-                  className="copy-btn"
-                >
-                  📋
-                </button>
-              </div>
               <button 
                 onClick={generateQRCode} 
-                className="generate-new-btn"
+                className="get-new-btn"
+                disabled={isGenerate}
               >
                 🔄 Сгенерировать новый
               </button>
@@ -160,8 +167,8 @@ function Dashboard({ user, onLogout }) {
         <ul>
           <li>✅ QR-код активен 5 минут</li>
           <li>✅ При сканировании передается уникальный ключ</li>
-          <li>✅ Ключ можно скопировать вручную</li>
-          <li>✅ После истечения времени нужно сгенерировать новый код</li>
+          <li>✅ После сканирования ключ удаляется и нужно сгенерировать новый</li>
+          <li>✅ Также после истечения времени нужно сгенерировать новый код</li>
         </ul>
       </div>
     </div>

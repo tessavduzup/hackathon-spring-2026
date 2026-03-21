@@ -35,24 +35,8 @@ export const validateFIO = (value) => {
     return {success: true};
 };
 
-export const validateNumber = (value) => {
-    if (!/^[0-9.]+$/.test(value)) {
-        return 'Только цифры'
-    } else if (parseFloat(value) <= 0) 
-        return 'Сумма должна быть больше 0'
-    return true
-}
-
-export const validateDate = (value) => {
-    if (new Date(value) > new Date())
-        return 'Дата не может быть в будущем'
-    return true
-}
-
 export default {
     validatePassword,
     validateEmail,
-    validateFIO,
-    validateNumber,
-    validateDate
+    validateFIO
 };

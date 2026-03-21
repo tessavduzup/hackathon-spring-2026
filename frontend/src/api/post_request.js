@@ -12,9 +12,14 @@ API.interceptors.request.use((config) => {
     return config
 })
 
-export async function loginUser(email, password) {
+export async function loginUser(_email, _password) {
     try {
-        const response = await API.post('/login', { email, password });
+        const userData = {
+            email: _email,
+            password: _password
+        }
+        const jsonUserData = JSON.stringify(userData)
+        const response = await API.post('/login', jsonUserData);
         return response
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка авторизации')
@@ -23,7 +28,8 @@ export async function loginUser(email, password) {
 
 export async function registerUser(userData) {
     try {
-        const response = await API.post('/users/create', userData);
+        const jsonUserData = JSON.stringify(userData)
+        const response = await API.post('/users/create/', jsonUserData);
         return response;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка регистрации');

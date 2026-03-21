@@ -141,7 +141,7 @@ def user_create(request: HttpRequest):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return JsonResponse({'error': str(e.with_traceback())}, status=500)
 
 @csrf_exempt
 @require_http_methods(["PUT", "PATCH"])

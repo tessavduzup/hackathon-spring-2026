@@ -1,7 +1,8 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
-import { validateEmail, validateFIO, validatePassword } from '../utils/validators';
+import { validateEmail, validateFIO, validatePassword } from '../utils/Validators';
+import { ERROR_MESSAGE_TIME } from '../utils/DefaultValues';
 import { registerUser } from '../api/post_request';
 import '../styles/Registration.css'
 
@@ -12,32 +13,34 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [role_id, setRole_id] = useState(2)
+  const [isAdmin, setIsAdmin] = useState(false)
+
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
+  const [isSend, setIsSend] = useState(false)
   
   const validateRegisterForm = () => {
-    return validateEmail(email) && validatePassword(password) && validateFIO(name) && validateFIO(surname) && validateFIO(middle_name) && validatePassword(confirmPassword)
+    return validateEmail(email).success && validatePassword(password).success && validateFIO(name).success && validateFIO(surname).success && validateFIO(middle_name).success && validatePassword(confirmPassword).success && password === confirmPassword
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateRegisterForm) {
+
+    if (!validateRegisterForm() || isSend) {
       return
     }
 
     setErrors({});
     const newUser = {
-      name,
-      surname,
-      middle_name,
-      email,
-      password,
-      role_id
+      name: name,
+      surname: surname,
+      middle_name: middle_name,
+      email: email,
+      password: password,
+      role_id: role_id
     };
 
     try {
+      setIsSend(true)
       const response = await registerUser(newUser)
       if (response.success) {
         toast.success('Пользователь успешно добавлен!');
@@ -46,12 +49,26 @@ function Register() {
       }
     } catch (error) {
       setErrors(prev => ({...prev, error: `Ошибка: ${error.message}`}))
-      toast.error('Ошибка регистрации пользователя')
+      toast.error('Ошибка регистрации пользователя', {duration: ERROR_MESSAGE_TIME})
+    } finally {
+      setTimeout(() => {
+        setIsSend(false)
+      }, ERROR_MESSAGE_TIME)
     }
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setErrors(prev => ({...prev, error: null}))
+    }, ERROR_MESSAGE_TIME);
+    return () => clearTimeout(timer)
+  }, [errors.error])
+
   return (
     <div className="auth-container">
+      <div className='back-btn-div'>
+        <Link to='/dashboard'><button className='exit-btn'>Выход</button></Link>
+      </div>
       <h2>📝 Регистрация</h2>
       {errors.error && <div className="error-message">{errors.error}</div>}
       <form onSubmit={handleSubmit}>
@@ -96,7 +113,7 @@ function Register() {
           />
         </div>
         <div className="form-group">
-          <label>Фамилия</label>
+          <label>Отчество</label>
           {middle_name && errors.error_middle_name && <div className="error-message">{errors.error_middle_name}</div>}
           <input
             type="text"
@@ -178,37 +195,16 @@ function Register() {
           />
         </div>
         <div className="form-group">
-          <label>Роль</label>
-          <div className='roles-group'>
-            <div className='role'>
-              <label>
-                Администратор
-                <input
-                  className='radio-button'
-                  type="radio"
-                  name="Aдмин"
-                  checked={role_id === 1}
-                  onChange={() => setRole_id(1)}
-                  />
-              </label>
-            </div>
-            <div className='role'>
-              <label>
-                Пользователь
-                <input
-                  className='radio-button'    
-                  type="radio"
-                  name="Пользователь"
-                  checked={role_id === 2}
-                  onChange={() => setRole_id(2)}
-                  />
-              </label>
-            </div>  
-          </div>
+          <label>
+            <input
+              type="checkbox"
+              checked={isAdmin}
+              onChange={(e) => setIsAdmin(e.target.checked)}
+            /> Администратор
+          </label>
         </div>
-        <button type="submit" className="auth-button">
+        <button type="submit" className="auth-button" disabled={isSend}>
           Зарегистрироваться
-          
         </button>
       </form>
     </div>
