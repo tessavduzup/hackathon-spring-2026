@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
-import { validateEmail, validatePassword } from '../utils/validators';
+import { validateEmail, validatePassword } from '../utils/Validators';
 import './../styles/Login.css';
 
 function Login() {
@@ -11,7 +11,7 @@ function Login() {
   const [errors, setErrors] = useState({});
   const [isSend, setIsSend] = useState(false)
   const navigate = useNavigate();
-  const {login} = useAuth()
+  const { login } = useAuth()
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,7 +25,6 @@ function Login() {
     try {
       setIsSend(true)
       const response = await login(email, password)
-      console.log(response)
       if (response.success) {
         toast.success('Добро пожаловать!');
         navigate('/dashboard');

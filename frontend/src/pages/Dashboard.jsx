@@ -85,8 +85,10 @@ function Dashboard() {
         setIsActive(false);
         setKey(null);
         setTimeLeft(null);
+
         localStorage.removeItem('activeKey');
         localStorage.removeItem('keyExpiry');
+
         toast.error('Время действия ключа истекло');
         clearInterval(interval);
       } else {

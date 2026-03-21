@@ -20,7 +20,10 @@ export const validatePassword = (value) => {
 
 export const validateEmail = (value) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.(ru|com|net|org|kz|by|ua)$/i;
-    if (!emailRegex.test(value)) {
+    if (value.length == 0) {
+        return {success: false, error: 'Поле не должно быть пустым'}
+    }
+    else if (!emailRegex.test(value)) {
         return {success: false, error: 'Введите корректный email адрес'};
     }
     return {success: true};

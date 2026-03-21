@@ -8,10 +8,6 @@ import './App.css';
 
 function AppRoutes() {
   const { user, isAuthenticated } = useAuth();
-  
-  console.log('AppRoutes - isAuthenticated:', isAuthenticated);
-  console.log('AppRoutes - user:', user);
-
   return (
     <Routes>
       <Route 

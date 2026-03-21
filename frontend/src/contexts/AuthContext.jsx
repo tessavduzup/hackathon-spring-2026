@@ -21,6 +21,7 @@ export const AuthProvider = ({ children }) => {
   const fetch = async () => {
     try {
       const response = fetchUser()
+      console.log(response)
       setUser(response.data.user);
       setIsAuthenticated(true)
     } catch (error) {
