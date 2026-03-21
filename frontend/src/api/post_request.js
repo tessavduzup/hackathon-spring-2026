@@ -20,6 +20,7 @@ export async function loginUser(_email, _password) {
         }
         const jsonUserData = JSON.stringify(userData)
         const response = await API.post('/login', jsonUserData);
+        console.log(response)
         return response
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка авторизации')
@@ -30,6 +31,7 @@ export async function registerUser(userData) {
     try {
         const jsonUserData = JSON.stringify(userData)
         const response = await API.post('/users/create/', jsonUserData);
+        console.log(response)
         return response;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка регистрации');

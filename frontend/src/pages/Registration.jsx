@@ -22,6 +22,20 @@ function Register() {
     return validateEmail(email).success && validatePassword(password).success && validateFIO(name).success && validateFIO(surname).success && validateFIO(middle_name).success && validatePassword(confirmPassword).success && password === confirmPassword
   }
 
+  const resetInput = () => {
+    setName('')
+    setSurname('')
+    setMiddle_name('')
+    setEmail('')
+    setPassword('')
+    setConfirmPassword('')
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -36,13 +50,14 @@ function Register() {
       middle_name: middle_name,
       email: email,
       password: password,
-      role_id: role_id
+      role_id: isAdmin ? 1 : 2
     };
 
     try {
       setIsSend(true)
       const response = await registerUser(newUser)
-      if (response.success) {
+      if (response.data.success) {
+        resetInput()
         toast.success('Пользователь успешно добавлен!');
       } else {
         throw new Error('Ошибка регистрации')

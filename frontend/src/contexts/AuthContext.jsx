@@ -35,8 +35,8 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await loginUser(email, password)
       localStorage.setItem('token', response.token)
-      localStorage.setItem('user', response.data)
-      setUser(response.data)
+      localStorage.setItem('user', response.data.user)
+      setUser(response.data.user)
       setIsAuthenticated(true)
       setLoading(true)
       return {success: true}
