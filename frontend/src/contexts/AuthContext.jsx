@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }) => {
       if (response.success) {
         if (localStorage.getItem('activeKey')) {
           try {
-            const response = deleteKey()
+            const response = deleteKey(user.id)
             if (response.data.success) {
               console.log('Ключ успешно удалён');
             } else {

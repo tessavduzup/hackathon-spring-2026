@@ -24,9 +24,9 @@ function Dashboard() {
       localStorage.removeItem('activeKey');
       localStorage.removeItem('keyExpiry');
       try {
-        const response = deleteKey()
+        const response = deleteKey(user.id)
         if (response.data.success) {
-          console.log('Ключ успешно удалён')
+          console.log('Ключ успешно удале')
         } else {
           console.error('Ошибка при удалении ключа')
         }
@@ -104,7 +104,7 @@ function Dashboard() {
         
         toast.error('Время действия ключа истекло');
         try {
-          const response = deleteKey()
+          const response = deleteKey(user.id)
           if (response.data.success) {
             console.log('Ключ успешно удалён');
           } else {
