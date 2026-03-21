@@ -438,20 +438,24 @@ class KeyCreateView(APIView):
     def post(self, request):
         try:
             user = request.user
-
             user_data = model_to_dict(user)
-
             json_data = json.dumps(user_data, ensure_ascii=False, default=str)
-
             qr_img = qrcode.make(json_data)
 
             buffer = BytesIO()
             qr_img.save(buffer, format='PNG')
-            decoded_qr = base64.b64encode(buffer.getvalue()).decode()
+            encoded_qr = base64.b64encode(buffer.getvalue()).decode()
+
+            key = Key.objects.create(
+                key_code=encoded_qr,
+                created_at=datetime.now(),
+                user_id=user_data['id'],
+                status_id=1
+            )
 
             return JsonResponse({
                 'success': True,
-                'decoded_qr': decoded_qr,
+                'decoded_qr': key.key_code,
                 'user_data': user_data
             }, status=status.HTTP_200_OK)
 
