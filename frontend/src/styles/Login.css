@@ -1,72 +1,514 @@
-#loginForm{
-  max-width: 500px;
+/* Общий сброс и базовые стили */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-div:has(> form){
-  width: min(100%, 420px);
-  margin: 40px auto;
-  padding: 28px;
-  background: #fff;
-  color: var(--text);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  box-shadow: 0 18px 50px rgba(17,24,39,.08);
-}
-
-div:has(> form) > h1{
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: .2px;
-  margin: 0 0 20px;
-}
-
-.submitSuccess, .submitErrors{
-  margin: 0 0 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  border: 1px solid;
-}
-.submitSuccess{ background:#f0fdf4; color:#166534; border-color:#bbf7d0; }
-.submitErrors{ background:#fef2f2; color:#991b1b; border-color:#fecaca; }
-
-form{ display: grid; gap: 14px; }
-
-/* Инпуты без классов */
-form input[type="text"],
-form input[type="email"],
-form input[type="password"]{
+/* Основной контейнер страницы */
+.auth-page {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100vh;
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
+  background: linear-gradient(120.23deg, #5A018A 37.88%, #670F51 100%);
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/* Верхняя полупрозрачная полоса */
+.auth-top-bar {
+  position: absolute;
+  width: 100%;
+  height: 89px;
+  left: 0;
+  top: 0;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 1;
+}
+
+/* Нижняя полупрозрачная полоса */
+.auth-bottom-bar {
+  position: absolute;
+  height: 168px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.4);
+  z-index: 1;
+}
+
+/* Декоративные эллипсы */
+.auth-ellipse-1 {
+  position: absolute;
+  width: 132px;
+  height: 132px;
+  background: #FF4F12;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.auth-ellipse-2 {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: #82EA00;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+/* Логотип */
+.auth-logo {
+  position: absolute;
+  left: 20px;
+  top: 20px;
+  z-index: 2;
+}
+
+.auth-logo img {
+  width: 167px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Текст "By Gen lambda" */
+.auth-gen {
+  position: absolute;
+  right: 20px;
+  top: 41px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: right;
+  color: #FFFFFF;
+  z-index: 2;
+}
+
+/* Основной текст "ТОЧКА ВХОДА" */
+.auth-title {
+  position: absolute;
+  z-index: 2;
+  padding: 0 20px;
+  font-family: 'PP Neue Machina', 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+/* Контейнер формы */
+.auth-container {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  z-index: 2;
+}
+
+/* Сообщения об ошибках */
+.error-message {
+  color: #d90707;
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  line-height: 15px;
+  margin-top: 4px;
+  margin-bottom: 0;
+  font-weight: 500;
+  text-align: left;
+  background: rgba(255, 142, 142, 0.7);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #d90707;
+  width: 100%;
+  backdrop-filter: blur(4px);
+  opacity: 1;
+}
+
+.error-message:empty {
+  display: none;
+}
+
+/* Кнопка */
+.auth-button {
+  width: 100%;
+  padding: 11px 0 12px;
+  background: #FF4F12;
   border-radius: 10px;
-  background: #fff;
-  color: var(--text);
-  outline: none;
-  transition: border-color .15s, box-shadow .15s;
-}
-form input:focus{
-  border-color: var(--purple);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--purple) 18%, transparent);
-}
-
-div:has(> form) > h4{
-  margin: 16px 0 6px;
-  font-size: 14px;
-  color: var(--muted);
-}
-div:has(> form) > a{
-  color: var(--purple);
-  font-weight: 600;
-  text-decoration: none;
-}
-div:has(> form) > a:hover{
-  color: var(--orange);
-  text-decoration: underline;
+  border: 2px solid transparent;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
 }
 
-/* Адаптив */
-@media (max-width: 480px){
-  div:has(> form){ margin: 40px auto; padding: 22px; }
-  div:has(> form) > h1{ font-size: 24px; }
+.auth-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+  border-color: #FFFFFF;
+}
+
+.auth-button:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #FFFFFF;
+  transform: translateY(0);
+}
+
+.auth-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Футер с копирайтом */
+.auth-copyright {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  color: #FFFFFF;
+  z-index: 2;
+}
+
+/* Футер с поддержкой */
+.auth-support {
+  position: absolute;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 15px;
+  text-align: right;
+  color: #FFFFFF;
+  z-index: 2;
+}
+
+/* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1000px и выше) ========== */
+@media (min-width: 1300px) {
+  .auth-ellipse-1 {
+    width: 179px;
+    height: 179px;
+    left: 120px;
+    top: calc(60% - 100px);
+  }
+
+  .auth-ellipse-2 {
+    width: 76px;
+    height: 76px;
+    right: 205px;
+    top: 110px;
+  }
+
+  .auth-logo {
+    left: 27px;
+    top: 7px;
+  }
+
+  .auth-logo img {
+    width: 247px;
+  }
+
+  .auth-gen {
+    right: 50px;
+    top: 45px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .auth-title {
+    left: 15%;
+    top: calc(50% - 150px);
+    width: 437px;
+    font-size: 128px;
+    line-height: 124px;
+    text-align: left;
+    padding: 5px;
+  }
+
+  .auth-container {
+    right: 15%;
+    top: calc(50% - 175px);
+    transform: none;
+    width: 440px;
+    left: auto;
+  }
+
+  .auth-copyright {
+    left: 43px;
+    bottom: 24px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+
+  .auth-support {
+    right: 40px;
+    bottom: 35px;
+    font-size: 20px;
+    line-height: 24px;
+  }
+}
+
+/* ========== ПЛАНШЕТЫ (768px - 999px) ========== */
+@media (min-width: 768px) and (max-width: 1300px) {
+  .auth-ellipse-1 {
+    width: 150px;
+    height: 150px;
+    left: 30px;
+    bottom: 20%;
+  }
+
+  .auth-ellipse-2 {
+    width: 70px;
+    height: 70px;
+    right: 30px;
+    top: 120px;
+  }
+
+  .auth-logo img {
+    width: 180px;
+  }
+
+  .auth-gen {
+    font-size: 14px;
+    top: 35px;
+  }
+
+  .auth-title {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 15%;
+    top: auto;
+    width: 80%;
+    font-size: 56px;
+    line-height: 1.2;
+    text-align: center;
+  }
+
+  .auth-container {
+    top: 120px;
+    width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .auth-copyright {
+    left: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+
+  .auth-support {
+    right: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+}
+
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
+@media (max-width: 767px) {
+  .auth-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+  }
+
+  .auth-container {
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    transform: none;
+    width: 90%;
+    max-width: 343px;
+    margin: 0 auto;
+    margin-top: 80px;
+    margin-bottom: 40px;
+  }
+
+  .auth-title {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    width: 90%;
+    font-size: 40px;
+    line-height: 1.2;
+    text-align: center;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    order: 2;
+  }
+
+  .auth-ellipse-1 {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 15px;
+    bottom: 20%;
+    top: auto;
+  }
+
+  .auth-ellipse-2 {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+    right: 20px;
+    top: 30%;
+    bottom: auto;
+  }
+
+  .auth-copyright {
+    left: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+
+  .auth-support {
+    right: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+}
+
+/* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
+@media (max-width: 480px) {
+  .auth-ellipse-1 {
+    width: 80px;
+    height: 80px;
+    left: 10px;
+    bottom: 20%;
+  }
+
+  .auth-ellipse-2 {
+    width: 45px;
+    height: 45px;
+    right: 15px;
+    top: 32%;
+  }
+
+  .auth-title {
+    margin-top: 30px;
+    bottom: 15%;
+  }
+
+  .auth-container {
+    top: 80px;
+    width: 92%;
+    max-width: 280px;
+  }
+
+  .auth-form-content {
+    padding: 25px 16px;
+  }
+
+  .auth-form-content h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .auth-button {
+    font-size: 16px;
+    padding: 8px 0;
+  }
+
+  .auth-copyright {
+    left: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+
+  .auth-support {
+    right: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+}
+
+/* ========== ВЫСОКИЕ ЭКРАНЫ НА МОБИЛКЕ ========== */
+@media (max-width: 767px) and (min-height: 800px) {
+  .auth-container {
+    top: 120px;
+  }
+
+  .auth-title {
+    margin-top: 30px;
+    bottom: 22%;
+  }
+
+  .auth-ellipse-1 {
+    bottom: 28%;
+  }
+}
+
+@media (max-width: 767px) and (min-height: 900px) {
+  .auth-container {
+    top: 10%;
+  }
+
+  .auth-title {
+    position: relative;
+    left: auto;
+    right: auto;
+    top: auto;
+    bottom: auto;
+    transform: none;
+    width: 100%;
+    text-align: center;
+    margin: 20px auto 40px auto;
+    padding: 0 15px;
+  }
+
+  .auth-title img {
+    width: 80%;
+    max-width: 280px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .auth-ellipse-1 {
+    bottom: 20%;
+  }
+
+  .auth-ellipse-2 {
+    bottom: 5%;
+  }
+
+  .auth-copyright {
+    left: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+
+  .auth-support {
+    right: 20px;
+    bottom: 20px;
+    font-size: 12px;
+  }
+}
+
+/* Стили для скролла (опционально) */
+.auth-page::-webkit-scrollbar {
+  width: 8px;
+}
+
+.auth-page::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-page::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.auth-page::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
