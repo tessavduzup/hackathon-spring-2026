@@ -1,13 +1,16 @@
+import base64
 import json
 from datetime import datetime
 import qrcode
 from django.contrib.auth.hashers import make_password
+from django.forms.models import model_to_dict
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, AccessToken
 from rest_framework_simplejwt.views import TokenObtainPairView
+from io import BytesIO
 
 from .models import User, Key
 from .serializers import (
@@ -61,8 +64,6 @@ class LogoutView(APIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-
-# views.py - исправленный ProfileView
 class ProfileView(APIView):
     """
     Получение и обновление профиля текущего пользователя
@@ -110,7 +111,6 @@ class ProfileView(APIView):
             }
         }, status=status.HTTP_200_OK)
 
-
 class ChangePasswordView(generics.UpdateAPIView):
     """
     Смена пароля
@@ -129,8 +129,6 @@ class ChangePasswordView(generics.UpdateAPIView):
 
         return Response({'message': 'Пароль успешно изменен'}, status=status.HTTP_200_OK)
 
-
-# views.py - исправленный UserListView
 class UserListView(generics.ListAPIView):
     """
     Список пользователей (только для админов)
@@ -165,7 +163,6 @@ class UserListView(generics.ListAPIView):
             }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 
 @require_http_methods(["GET"])
 def user_list(request: HttpRequest):
@@ -300,7 +297,7 @@ def user_create(request: HttpRequest):
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e.with_traceback())}, status=500)
+        return JsonResponse({'error': str(e)}, status=500)
 
 @csrf_exempt
 @require_http_methods(["PUT", "PATCH"])
@@ -358,7 +355,6 @@ def user_delete(request: HttpRequest, user_id: int):
     except Exception as ex:
         return JsonResponse({'error': str(ex)}, status=500)
 
-
 @require_http_methods(["GET"])
 def key_list(request: HttpRequest):
     try:
@@ -405,23 +401,35 @@ def key_detail(request: HttpRequest, key_id: int):
     except Exception as ex:
         return JsonResponse({'error': str(ex)}, status=500)
 
-@csrf_exempt
-@require_http_methods(["POST"])
-def key_create(request: HttpRequest):
-    user_data = {
-        "user_id": 123,
-        "name": "Иван Петров",
-        "email": "ivan@example.com",
-        "role": "admin",
-        "permissions": ["read", "write", "delete"],
-        "issued_at": "2024-01-15T10:30:00"
-    }
 
-    json_data = json.dumps(user_data, ensure_ascii=False)
-    qr = qrcode.make(json_data)
-    qr.save("user_qr.png")
+class KeyCreateView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
 
-    return JsonResponse({'123':"asdas"}, status=200)
+    def post(self, request):
+        try:
+            user = request.user
+
+            user_data = model_to_dict(user)
+
+            json_data = json.dumps(user_data, ensure_ascii=False, default=str)
+
+            qr_img = qrcode.make(json_data)
+
+            buffer = BytesIO()
+            qr_img.save(buffer, format='PNG')
+            decoded_qr = base64.b64encode(buffer.getvalue()).decode()
+
+            return JsonResponse({
+                'success': True,
+                'decoded_qr': decoded_qr,
+                'user_data': user_data
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return JsonResponse({
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 @require_http_methods(["DELETE"])
 def key_delete(request: HttpRequest, key_id: int):

@@ -1,4 +1,3 @@
-# urls.py
 from django.urls import path
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
@@ -30,6 +29,6 @@ urlpatterns = [
     # Управление ключами
     path('api/keys/', views.key_list, name='key_list'),
     path('api/keys/<int:key_id>/', views.key_detail, name='key_detail'),
-    path('api/keys/create/', views.key_create, name='key_create'),
+    path('api/keys/create/', views.KeyCreateView.as_view(), name='key_create'),
     path('api/keys/<int:key_id>/delete/', views.key_delete, name='key_delete'),
 ]
