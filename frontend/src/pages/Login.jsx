@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '../contexts/AuthContext';
-import { validateEmail, validatePassword } from '../utils/validators';
+import { validateEmail, validatePassword } from '../utils/Validators';
+import { ERROR_MESSAGE_TIME } from '../utils/DefaultValues';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -15,7 +16,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateLoginForm()) {
+    if (!validateLoginForm() || isSend) {
       return
     }
 
@@ -33,21 +34,23 @@ function Login() {
     }
     catch {
       setErrors({error: 'Неверная почта или пароль'});
-      toast.error('Ошибка авторизации', {duration: 2000});
+      toast.error('Ошибка авторизации', {duration: ERROR_MESSAGE_TIME});
     } finally {
-      setIsSend(false)
+      setTimeout(() => {
+        setIsSend(false)  
+      }, ERROR_MESSAGE_TIME)
     }
   };
 
   useEffect(() => {
     const timer = setTimeout(() =>{
       setErrors({error: null})
-    }, 2000)
+    }, ERROR_MESSAGE_TIME)
     return () => clearTimeout(timer)
   }, [errors.error])
 
   const validateLoginForm = () => {
-    return validateEmail(email) && validatePassword(password)
+    return validateEmail(email).success && validatePassword(password).success
   }
 
   return (
@@ -57,7 +60,7 @@ function Login() {
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label>Email</label>
-          {errors.error_email && <div className="error-message">{errors.error_email}</div>}
+          {email && errors.error_email && <div className="error-message">{errors.error_email}</div>}
           <input
             type="email"
             value={email}
@@ -77,7 +80,7 @@ function Login() {
         </div>
         <div className="form-group">
           <label>Пароль</label>
-          {errors.error_password && <div className="error-message">{errors.error_password}</div>}
+          {password && errors.error_password && <div className="error-message">{errors.error_password}</div>}
           <input
             type="password"
             value={password}
