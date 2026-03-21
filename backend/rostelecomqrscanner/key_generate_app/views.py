@@ -200,8 +200,6 @@ def user_delete(request: HttpRequest, user_id: int):
         return JsonResponse({'error': str(ex)}, status=500)
 
 
-
-
 @require_http_methods(["GET"])
 def key_list(request: HttpRequest):
     try:
