@@ -23,7 +23,6 @@ from rest_framework.response import Response
 class LoginView(TokenObtainPairView):
     """
     Вход пользователя
-    POST /api/login/
 
     Возвращает:
     - access: токен для API запросов
@@ -55,7 +54,7 @@ class LoginView(TokenObtainPairView):
 class LogoutView(APIView):
     """
     Выход пользователя
-    POST /api/logout/
+    POST api/logout/
     """
     permission_classes = [permissions.IsAuthenticated]
 
@@ -155,7 +154,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
 class UserListView(generics.ListAPIView):
     """
-    Список пользователей (только для админов)
+    Список пользователей (только для администраторов)
     GET /api/users/
     """
     permission_classes = [permissions.IsAdminUser]
@@ -189,14 +188,18 @@ class UserListView(generics.ListAPIView):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-@require_http_methods(["GET"])
-def user_list(request: HttpRequest):
-    try:
-        users = User.objects.select_related('role').all()
-        users_data = []
-        for user in users:
-            users_data.append(
-                {
+class UserDetailView(APIView):
+    """
+    Уникальный пользователь (только для администраторов)
+    GET /api/users/<int:user_id>
+    """
+
+    def get(self, request: HttpRequest, user_id: int):
+        try:
+            user = get_object_or_404(User, id=user_id)
+            return JsonResponse({
+                'success': True,
+                'user': {
                     'id': user.pk,
                     'name': user.name,
                     'surname': user.surname,
@@ -209,17 +212,138 @@ def user_list(request: HttpRequest):
                     'registered_at': user.registered_at,
                     'deleted_at': user.deleted_at
                 }
+            }, status=200)
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'User not found'}, status=400)
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': str(ex)}, status=500)
+
+class KeyCreateView(APIView):
+    """
+    Создание QR-кода
+    POST api/keys/create/
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request: HttpRequest):
+        try:
+            user = request.user
+            user_data = model_to_dict(user)
+            json_data = json.dumps(user_data, ensure_ascii=False, default=str)
+            qr_img = qrcode.make(json_data)
+
+            buffer = BytesIO()
+            qr_img.save(buffer, format='PNG')
+            # encoded_qr = base64.b64encode(buffer.getvalue()).decode()
+
+            key_hash = hashlib.sha256(json_data.encode()).hexdigest()
+
+            key = Key.objects.create(
+                key_code=key_hash,
+                created_at=datetime.now(),
+                user_id=user_data['id'],
+                status_id=1
             )
 
-        return JsonResponse(
-            {
+            return JsonResponse({
                 'success': True,
-                'users_count': len(users_data),
-                'users': users_data
-            }
+                'qr_code': key,
+                'user_data': user_data
+            }, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return JsonResponse({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def key_create(request: HttpRequest):
+    try:
+        user = request.user
+        user_data = model_to_dict(user)
+        json_data = json.dumps(user_data, ensure_ascii=False, default=str)
+        qr_img = qrcode.make(json_data)
+
+        buffer = BytesIO()
+        qr_img.save(buffer, format='PNG')
+        # encoded_qr = base64.b64encode(buffer.getvalue()).decode()
+
+        key_hash = hashlib.sha256(json_data.encode()).hexdigest()
+
+        key = Key.objects.create(
+            key_code=key_hash,
+            created_at=datetime.now(),
+            user_id=user_data['id'],
+            status_id=1
         )
+
+        return JsonResponse({
+            'success': True,
+            'qr_code': key,
+            'user_data': user_data
+        }, status=status.HTTP_200_OK)
+
     except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class KeyDeleteView(APIView):
+    """
+    Удаление QR-кода
+    DELETE api/keys/<int:key_id>/delete/
+    """
+    def delete(self, request: HttpRequest, key_id: int):
+        try:
+            key = get_object_or_404(Key, pk=key_id)
+
+            key_data = {
+                'id': key.pk,
+                'key_code': key.key_code,
+                'user': f"{key.user.name} {key.user.surname}"
+            }
+
+            key.delete()
+
+            return JsonResponse({
+                'success': True,
+                'message': 'Key deleted successfully',
+                'key_data': key_data
+            })
+
+        except Key.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Key Not Found'}, status=404)
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': str(ex)}, status=500)
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def key_delete(request: HttpRequest, key_id: int):
+    try:
+        key = get_object_or_404(Key, pk=key_id)
+
+        key_data = {
+            'id': key.pk,
+            'key_code': key.key_code,
+            'user': f"{key.user.name} {key.user.surname}"
+        }
+
+        key.delete()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Key deleted successfully',
+            'key_data': key_data
+        })
+
+    except Key.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Key Not Found'}, status=404)
+    except Exception as ex:
+        return JsonResponse({'success': False, 'error': str(ex)}, status=500)
 
 @require_http_methods(["GET"])
 def active_user_list(request: HttpRequest):
@@ -329,6 +453,25 @@ def user_create(request: HttpRequest):
         return JsonResponse({'success': False, 'error': str(e)}, status=500)
 
 @csrf_exempt
+@require_http_methods(["POST"])
+def user_restore(request: HttpRequest, user_id: int):
+    try:
+        user = get_object_or_404(User.objects.all(), pk=user_id)
+        if not user.deleted_at:
+            return Response(
+                {'success': False, 'error': 'Сотрудник не был удален'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        user.deleted_at = None
+        user.save()
+
+    except json.JSONDecodeError:
+        return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+
+@csrf_exempt
 @require_http_methods(["PUT", "PATCH"])
 def user_update(request: HttpRequest, user_id: int):
     try:
@@ -361,18 +504,19 @@ def user_update(request: HttpRequest, user_id: int):
     except Exception as ex:
         return JsonResponse({'success': False, 'error': str(ex)}, status=500)
 
-@require_http_methods(["DELETE"])
+@require_http_methods(["PUT", "PATCH"])
 def user_delete(request: HttpRequest, user_id: int):
     try:
         user = get_object_or_404(User, pk=user_id)
+
+        setattr(user, 'deleted_at', datetime.now())
+        user.save()
 
         user_data = {
             'id': user.pk,
             'email': user.email,
             'name': f"{user.name} {user.surname}"
         }
-
-        user.delete()
 
         return JsonResponse( {
             'success': False,
@@ -429,64 +573,5 @@ def key_detail(request: HttpRequest, key_id: int):
         }, status=200)
     except Key.DoesNotExist:
         return JsonResponse({'success': False, 'error': 'Key not found'}, status=400)
-    except Exception as ex:
-        return JsonResponse({'success': False, 'error': str(ex.print_with_stacktrace())}, status=500)
-
-class KeyCreateView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    def post(self, request):
-        try:
-            user = request.user
-            user_data = model_to_dict(user)
-            json_data = json.dumps(user_data, ensure_ascii=False, default=str)
-            qr_img = qrcode.make(json_data)
-
-            buffer = BytesIO()
-            qr_img.save(buffer, format='PNG')
-            # encoded_qr = base64.b64encode(buffer.getvalue()).decode()
-
-            key_hash = hashlib.sha256(json_data.encode()).hexdigest()
-
-            key = Key.objects.create(
-                key_code=key_hash,
-                created_at=datetime.now(),
-                user_id=user_data['id'],
-                status_id=1
-            )
-
-            return JsonResponse({
-                'success': True,
-                'decoded_qr': key.key_code,
-                'user_data': user_data
-            }, status=status.HTTP_200_OK)
-
-        except Exception as e:
-            return JsonResponse({
-                'success': False,
-                'error': str(e)
-            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-@require_http_methods(["DELETE"])
-def key_delete(request: HttpRequest, key_id: int):
-    try:
-        key = get_object_or_404(Key, pk=key_id)
-
-        key_data = {
-            'id': key.pk,
-            'key_code': key.key_code,
-            'user': f"{key.user.name} {key.user.surname}"
-        }
-
-        key.delete()
-
-        return JsonResponse({
-            'success': True,
-            'message': 'Key deleted successfully',
-            'key_data': key_data
-        })
-
-    except Key.DoesNotExist:
-        return JsonResponse({'success': False, 'error': 'Key Not Found'}, status=404)
     except Exception as ex:
         return JsonResponse({'success': False, 'error': str(ex)}, status=500)
