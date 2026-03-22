@@ -93,10 +93,6 @@ cd hackathon2026
 npm install
 ```
 
-VITE_API_BASE_URL=https://api.your-domain.com/api
-VITE_ACCESS_TOKEN_KEY=access
-VITE_REFRESH_TOKEN_KEY=refresh
-
 3. Запустите проект в режиме разработки
 
 ```bash
