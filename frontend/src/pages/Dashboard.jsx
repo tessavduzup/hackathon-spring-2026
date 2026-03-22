@@ -8,7 +8,6 @@ import { ERROR_MESSAGE_TIME } from '../utils/DefaultValues';
 import { useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { deleteKey } from '../api/delete_request';
-import { FaUser, FaUsers } from 'react-icons/fa';
 import ProtectedContent from '../pages/ProtectedContent';
 
 function Dashboard() {
@@ -171,12 +170,10 @@ function Dashboard() {
               <p className={user?.role === 1 ? "dashboard-user-role-admin description-l-strong" : "dashboard-user-role-staff description-l-strong"}>
                 {user?.role === 1 ? (
                   <>
-                    <FaUser style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                     Администратор
                   </>
                 ) : (
                   <>
-                    <FaUsers style={{ marginRight: '8px', verticalAlign: 'middle' }} />
                     Сотрудник
                   </>
                 )}
