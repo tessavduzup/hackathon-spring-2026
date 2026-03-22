@@ -171,8 +171,17 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
 ]
-# CORS_ALLOW_ALL_ORIGINS = True
 
 CORS_ALLOW_CREDENTIALS = True
 
 AUTH_USER_MODEL = 'key_generate_app.User'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 's.petrushin128@gmail.com'
+EMAIL_HOST_PASSWORD = 'nooi rcyn kbhb xpsq'
+DEFAULT_FROM_EMAIL = 'Webmaster <s.petrushin128@gmail.com>'
+EMAIL_USE_SSL = False

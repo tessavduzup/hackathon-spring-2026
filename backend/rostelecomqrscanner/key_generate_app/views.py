@@ -59,15 +59,27 @@ class LogoutView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request):
+    def post(self, request: HttpRequest):
         try:
             refresh_token = request.data.get('refresh')
             if refresh_token:
                 token = RefreshToken(refresh_token)
                 token.blacklist()
-            return Response({'success': True, 'message': 'Успешный выход'}, status=status.HTTP_200_OK)
+            return Response({
+                'success': True,
+                'message': 'Успешный выход'
+            }, status=status.HTTP_200_OK)
+
+        except Key.DoesNotExist:
+            return Response({
+                'success': False,
+                'error': 'Ключ не найден или не принадлежит пользователю'
+            }, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
-            return Response({'success': False, 'error': str(e.print_with_stacktrace())}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({
+                'success': False,
+                'error': str(e)
+            }, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView(APIView):
     """
@@ -155,7 +167,7 @@ class ChangePasswordView(generics.UpdateAPIView):
 
 class UserListView(generics.ListAPIView):
     """
-    Список пользователей (только для админов)
+    Список действующих сотрудников (только для админов)
     GET /api/users/
     """
     permission_classes = [permissions.IsAdminUser]
@@ -188,6 +200,77 @@ class UserListView(generics.ListAPIView):
             }, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class ActiveUserListView(generics.ListAPIView):
+    """
+    Список всех когда-либо зарегистрированных сотрудников (только для админов)
+    GET /api/users/active
+    """
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        try:
+            users = User.objects.select_related('role').all()
+            users_data = []
+            for user in users:
+                if not user.deleted_at:
+                    users_data.append({
+                        'id': user.pk,
+                        'name': user.name,
+                        'surname': user.surname,
+                        'middle_name': user.middle_name,
+                        'email': user.email,
+                        'role': {
+                            'id': user.role.id,
+                            'name': user.role.role  # предполагаю, что в Role есть поле role
+                        },
+                        'is_active': user.is_active,
+                        'is_staff': user.is_staff,
+                        'registered_at': user.registered_at,
+                        'deleted_at': user.deleted_at
+                    })
+
+            return Response({
+                'success': True,
+                'users_count': len(users_data),
+                'users': users_data
+            }, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class UserDetailView(APIView):
+    """
+    Информация о сотруднике (только для админов)
+    GET api/users/<int:user_id>/
+    """
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request: HttpRequest,  user_id: int):
+        try:
+            user = get_object_or_404(User, id=user_id)
+            return JsonResponse({
+                'success': True,
+                'user': {
+                    'id': user.pk,
+                    'name': user.name,
+                    'surname': user.surname,
+                    'middle_name': user.middle_name,
+                    'email': user.email,
+                    'role': {
+                        'id': user.role.id,
+                        'name': user.role.role
+                    },
+                    'registered_at': user.registered_at,
+                    'deleted_at': user.deleted_at
+                }
+            }, status=200)
+        except User.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'User not found'}, status=400)
+        except Exception as ex:
+            return JsonResponse({'success': False, 'error': str(ex)}, status=500)
+
+
+
 
 @require_http_methods(["GET"])
 def user_list(request: HttpRequest):

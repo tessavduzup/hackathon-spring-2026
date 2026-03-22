@@ -18,10 +18,10 @@ urlpatterns = [
 
     path('api/users/', views.UserListView.as_view(), name='user_list'),
     path('api/users/create/', views.user_create, name='user_create'),
-    path('api/users/<int:user_id>/', views.user_detail, name='user_detail'),
+    path('api/users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
     path('api/users/<int:user_id>/update/', views.user_update, name='user_update'),
     path('api/users/<int:user_id>/delete/', views.user_delete, name='user_delete'),
-    path('api/users/active/', views.active_user_list, name='active_user_list'),
+    path('api/users/active/', views.ActiveUserListView.as_view(), name='active_user_list'),
 
     path('api/keys/', views.key_list, name='key_list'),
     path('api/keys/<int:key_id>/', views.key_detail, name='key_detail'),
