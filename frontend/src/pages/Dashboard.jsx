@@ -14,7 +14,6 @@ function Dashboard() {
   const [timeLeft, setTimeLeft] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const [isGenerate, setIsGenerate] = useState(false)
-  const [error, setError] = useState('')
 
   const { user, logout } = useAuth()
   const navigate = useNavigate()
@@ -22,19 +21,16 @@ function Dashboard() {
   const generateQRCode = async () => {
 
     if (isActive) {
-      localStorage.removeItem('activeKey');
-      localStorage.removeItem('keyExpiry');
       try {
-        const response = deleteKey(user.id)
-        if (response.data.success) {
-          console.log('Ключ успешно удале')
-        } else {
-          console.error('Ошибка при удалении ключа')
-        }
+        await deleteKey()
       } catch {
         console.error('Ошибка при удалении ключа')
+      } finally {
+        localStorage.removeItem('key_code');
+        localStorage.removeItem('key_id')
+        localStorage.removeItem('keyExpiry');
+        setIsActive(false)
       }
-      setIsActive(false)
     }
 
     try {
@@ -42,11 +38,13 @@ function Dashboard() {
       const response = await getKey()
       console.log(response)
       if (response.data.success) {
-        setKey(response.data.decoded_qr)
+        const key = response.data.key
+        setKey(key.key_code)
         const expiryTime = Date.now() + 5 * 60 * 1000;
         setIsActive(true);
 
-        localStorage.setItem('activeKey', key);
+        localStorage.setItem('key_code', key.key_code);
+        localStorage.setItem('key_id', key.id)
         localStorage.setItem('keyExpiry', expiryTime);
 
         toast.success('QR-код сгенерирован! Активен 5 минут');
@@ -64,16 +62,18 @@ function Dashboard() {
   };
 
   useEffect(() => {
-    const savedKey = localStorage.getItem('activeKey');
-    const savedExpiry = localStorage.getItem('keyExpiry');
+    const savedKey = localStorage.getItem('key_code');
+    const savedIdKey = localStorage.getItem('key_id')
+    const savedExpiry =  localStorage.getItem('keyExpiry');
 
-    if (savedKey && savedExpiry) {
+    if (savedKey && savedExpiry && savedIdKey) {
       const now = Date.now();
       if (now < parseInt(savedExpiry)) {
         setKey(savedKey);
         setIsActive(true);
       } else {
-        localStorage.removeItem('activeKey');
+        localStorage.removeItem('key_code');
+        localStorage.removeItem('key_id')
         localStorage.removeItem('keyExpiry');
       }
     }
@@ -82,7 +82,7 @@ function Dashboard() {
   useEffect(() => {
     if (!isActive || !key) return;
 
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       const expiry = localStorage.getItem('keyExpiry');
       if (!expiry) {
         setIsActive(false);
@@ -99,22 +99,18 @@ function Dashboard() {
         setIsActive(false);
         setKey(null);
         setTimeLeft(null);
-
-        localStorage.removeItem('activeKey');
-        localStorage.removeItem('keyExpiry');
         
         toast.error('Время действия ключа истекло');
         try {
-          const response = deleteKey(user.id)
-          if (response.data.success) {
-            console.log('Ключ успешно удалён');
-          } else {
-            throw new Error('Ошибка при удалении')
-          }
+          await deleteKey()
         } catch {
           console.error('Ошибка при удалении ключа');
+        } finally {
+          localStorage.removeItem('key_code');
+          localStorage.removeItem('key_id')
+          localStorage.removeItem('keyExpiry');
+          clearInterval(interval);
         }
-        clearInterval(interval);
       } else {
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
@@ -165,7 +161,6 @@ function Dashboard() {
           </div >
 
         </div>
-        {error && <div className="dashboard-error-message">{error}</div>}
         <div className="dashboard-qr-container">
           {!isActive ? (
             <div className="dashboard-qr-placeholder">

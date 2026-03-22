@@ -59,33 +59,15 @@ class LogoutView(APIView):
     """
     permission_classes = [permissions.IsAuthenticated]
 
-    def post(self, request, key_id: int):
+    def post(self, request):
         try:
-            key = get_object_or_404(Key, pk=key_id, user=request.user)
-
             refresh_token = request.data.get('refresh')
             if refresh_token:
                 token = RefreshToken(refresh_token)
                 token.blacklist()
-
-            key.delete()
-
-            return Response({
-                'success': True,
-                'message': 'Успешный выход'
-            }, status=status.HTTP_200_OK)
-
-        except Key.DoesNotExist:
-            return Response({
-                'success': False,
-                'error': 'Ключ не найден или не принадлежит пользователю'
-            }, status=status.HTTP_404_NOT_FOUND)
+            return Response({'success': True, 'message': 'Успешный выход'}, status=status.HTTP_200_OK)
         except Exception as e:
-            return Response({
-                'success': False,
-                'error': str(e)
-            }, status=status.HTTP_400_BAD_REQUEST)
-
+            return Response({'success': False, 'error': str(e.print_with_stacktrace())}, status=status.HTTP_400_BAD_REQUEST)
 
 class ProfileView(APIView):
     """
@@ -485,6 +467,7 @@ class KeyCreateView(APIView):
                 'error': str(e)
             }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+@csrf_exempt
 @require_http_methods(["DELETE"])
 def key_delete(request: HttpRequest, key_id: int):
     try:

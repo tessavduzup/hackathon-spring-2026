@@ -1,6 +1,5 @@
 import { createContext, useState, useContext, useEffect } from 'react';
-import { loginUser } from '../api/post_request';
-import { logoutUser } from '../api/refresh_request'; 
+import { loginUser, logoutUser } from '../api/post_request';
 import { fetchUser } from '../api/get_request';
 import toast from 'react-hot-toast';
 import { deleteKey } from '../api/delete_request';
@@ -55,25 +54,16 @@ export const AuthProvider = ({ children }) => {
   const logout = async () => {
     const token = localStorage.getItem('refresh')
     try {
-      const response = await logoutUser(token)
-      if (response.data.success) {
-        if (localStorage.getItem('activeKey')) {
+        if (localStorage.getItem('key_id')) {
           try {
-            const response = deleteKey(user.id)
-            if (response.data.success) {
-              console.log('Ключ успешно удалён');
-            } else {
-              throw new Error('Ошибка при удалении ключа')
-            }
+            await deleteKey()
           } catch {
             console.error('Ошибка при удалении ключа');
             throw new Error('Ошибка при удалении ключа')
           }
         }
+        await logoutUser(token)
         toast.success('Сеанс успешно завершён');
-      } else {
-        throw new Error('Ошибка при выходе')
-      }
     } catch (error) {
         toast.error('Непредвиденная ошибка при выходе!');
     } finally {
