@@ -1,37 +1,37 @@
-/* Подключение кастомного шрифта */
-@font-face {
-  font-family: 'PTSans';
-  src: url('../assets/fonts/PTSans-Regular.ttf') format('ttf');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 @font-face {
-  font-family: 'PTSans';
-  src: url('../assets/fonts/PTSans-Italic.ttf') format('ttf');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'PTSans';
-  src: url('../assets/fonts/PTSans-Bold.ttf') format('ttf');
+  font-family: 'RostelecomBasis-Bold';
+  src: url('../assets/fonts/RostelecomBasis-Bold.woff2') format('woff2'),
+       url('../assets/fonts/RostelecomBasis-Bold.woff') format('woff');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'PTSans';
-  src: url('../assets/fonts/PTSans-BoldItalic.ttf') format('ttf');
-  font-weight: 700;
+  font-family: 'RostelecomBasis-Light';
+  src: url('../assets/fonts/RostelecomBasis-Light.woff2') format('woff2');
+  src: url('../assets/fonts/RostelecomBasis-Light.woff') format('woff');
+  font-weight: 300;
   font-style: normal;
   font-display: swap;
 }
 
-/* Применение шрифта */
-body {
-  font-family: 'PTSans', sans-serif;
+
+@font-face {
+  font-family: 'ostelecomBasis-Medium';
+  src: url('../assets/fonts/RostelecomBasis-Medium.woff') format('woff'),
+       url('../assets/fonts/RostelecomBasis-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'RostelecomBasis-Regular';
+  src: url('../assets/fonts/RostelecomBasis-Regular.woff') format('woff');
+  src: url('../assets/fonts/RostelecomBasis-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }

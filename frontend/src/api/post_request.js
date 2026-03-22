@@ -21,7 +21,6 @@ export async function loginUser(_email, _password) {
         }
         const jsonUserData = JSON.stringify(userData)
         const response = await API.post('api/login/', jsonUserData);
-
         console.log(response)
 
         if (response.data.access && response.data.refresh) {
@@ -46,6 +45,17 @@ export async function registerUser(userData) {
         return response;
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка регистрации');
+    }
+}
+
+export async function logoutUser(refresh_token) {
+    try {
+        const jsonUserData = JSON.stringify({'refresh': refresh_token})
+        const response = await API.post('api/logout/', jsonUserData);
+        console.log(response)
+        return response
+    } catch (error) {
+        throw new Error(error.response?.data?.message || 'Ошибка авторизации')
     }
 }
 

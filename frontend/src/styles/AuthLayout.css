@@ -1,0 +1,426 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Основной контейнер страницы */
+.auth-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 100vh;
+    width: 100%;
+    background: linear-gradient(120.23deg, #5A018A 37.88%, #670F51 100%);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.auth-header {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    left: auto;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    z-index: 3;
+}
+
+/* Верхняя полупрозрачная полоса */
+.auth-top-bar {
+    position: absolute;
+    width: 100%;
+    height: 89px;
+    left: 0;
+    top: 0;
+    background: rgba(255, 255, 255, 0.4);
+    z-index: 1;
+}
+
+/* Нижняя полупрозрачная полоса */
+.auth-bottom-bar {
+    position: absolute;
+    height: 168px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.4);
+    z-index: 1;
+}
+
+/* Декоративные эллипсы */
+.auth-ellipse-1 {
+    position: absolute;
+    width: 132px;
+    height: 132px;
+    background: #FF4F12;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.auth-ellipse-2 {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    background: #82EA00;
+    border-radius: 50%;
+    z-index: 1;
+}
+
+/* Логотип */
+.auth-logo {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 2;
+}
+
+.auth-logo img {
+    width: 167px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Футер с копирайтом */
+.auth-copyright {
+    position: absolute;
+    line-height: 15px;
+    color: #FFFFFF;
+    z-index: 2;
+}
+
+/* Футер с поддержкой */
+.auth-support {
+    position: absolute;
+    line-height: 15px;
+    text-align: right;
+    color: #FFFFFF;
+    z-index: 2;
+}
+
+.auth-gen {
+    position: absolute;
+    line-height: 15px;
+    text-align: center;
+    color: #FFFFFF;
+    z-index: 2;
+}
+
+/* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1300px и выше) ========== */
+@media (min-width: 1300px) {
+    .auth-ellipse-1 {
+        width: 300px;
+        height: 300px;
+        left: 120px;
+        top: calc(60% - 100px);
+    }
+
+    .auth-ellipse-2 {
+        width: 76px;
+        height: 76px;
+        right: 205px;
+        top: 110px;
+    }
+
+    .auth-logo {
+        left: 27px;
+        top: 7px;
+    }
+
+    .auth-logo img {
+        width: 247px;
+    }
+
+    .auth-gen {
+        left: 50%;
+        bottom: 24px;
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .auth-copyright {
+        left: 43px;
+        bottom: 24px;
+        font-size: 20px;
+        line-height: 24px;
+    }
+
+    .auth-support {
+        right: 40px;
+        bottom: 35px;
+        font-size: 20px;
+        line-height: 24px;
+    }
+}
+
+/* ========== ПЛАНШЕТЫ (768px - 1299px) ========== */
+@media (min-width: 768px) and (max-width: 1299px) {
+    .auth-ellipse-1 {
+        width: 150px;
+        height: 150px;
+        left: 30px;
+        bottom: 20%;
+        top: auto;
+    }
+
+    .auth-ellipse-2 {
+        width: 70px;
+        height: 70px;
+        right: 30px;
+        top: 120px;
+    }
+
+    .auth-logo {
+        left: 20px;
+        top: 15px;
+    }
+
+    .auth-gen {
+        left: 50%;
+        bottom: 20px;
+        font-size: 12px;
+    }
+
+    .auth-copyright {
+        left: 20px;
+        bottom: 20px;
+        font-size: 12px;
+    }
+
+    .auth-support {
+        right: 20px;
+        bottom: 20px;
+        font-size: 12px;
+    }
+}
+
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
+@media (max-width: 767px) {
+    .auth-page {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+    }
+
+    .auth-ellipse-1 {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        left: 15px;
+        bottom: 20%;
+        top: auto;
+    }
+
+    .auth-ellipse-2 {
+        position: absolute;
+        width: 55px;
+        height: 55px;
+        right: 20px;
+        top: 30%;
+        bottom: auto;
+    }
+
+    .auth-logo {
+        left: 15px;
+        top: 15px;
+    }
+
+    .auth-gen {
+        left: 50%;
+        bottom: 15px;
+        font-size: 10px;
+    }
+
+    .auth-copyright {
+        left: 15px;
+        bottom: 15px;
+        font-size: 10px;
+    }
+
+    .auth-support {
+        right: 15px;
+        bottom: 15px;
+        font-size: 10px;
+    }
+}
+
+/* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
+@media (max-width: 480px) {
+    .auth-ellipse-1 {
+        width: 80px;
+        height: 80px;
+        left: 10px;
+        bottom: 18%;
+    }
+
+    .auth-ellipse-2 {
+        width: 45px;
+        height: 45px;
+        right: 15px;
+        top: 28%;
+    }
+}
+
+/* ========== ВЫСОКИЕ ЭКРАНЫ НА МОБИЛКЕ ========== */
+@media (max-width: 767px) and (min-height: 800px) {
+    .auth-ellipse-1 {
+        bottom: 28%;
+    }
+}
+
+@media (max-width: 767px) and (min-height: 900px) {
+    .auth-ellipse-1 {
+        bottom: 20%;
+    }
+
+    .auth-ellipse-2 {
+        bottom: 5%;
+    }
+}
+
+/* Стили для скролла */
+.auth-page::-webkit-scrollbar {
+    width: 8px;
+}
+
+.auth-page::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.auth-page::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.auth-page::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Кнопка выхода в хедере */
+.auth-header .dashboard-btn {
+    /* Позиционирование */
+    position: relative;
+    z-index: 10;
+    
+    /* Стили кнопки */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* Текст */
+    color: #FFFFFF;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.auth-header .dashboard-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.auth-header .dashboard-btn:active {
+    transform: translateY(0);
+}
+
+/* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1300px и выше) ========== */
+@media (min-width: 1300px) {
+    .auth-header {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        left: auto;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        z-index: 3;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 10px 32px;
+        font-size: 16px;
+    }
+}
+
+/* ========== ПЛАНШЕТЫ (768px - 1299px) ========== */
+@media (min-width: 768px) and (max-width: 1299px) {
+    .auth-header {
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        left: auto;
+        z-index: 3;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 8px 24px;
+        font-size: 14px;
+    }
+}
+
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
+@media (max-width: 767px) {
+    .auth-header {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        left: auto;
+        z-index: 3;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 6px 18px;
+        font-size: 12px;
+    }
+}
+
+/* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
+@media (max-width: 480px) {
+    .auth-header {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 5px 14px;
+        font-size: 11px;
+    }
+}
+
+/* Альтернативный вариант: если нужно, чтобы кнопка была именно над формой,
+ * а не просто в углу, раскомментируйте этот блок и закомментируйте верхний */
+/*
+.auth-header {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    z-index: 3;
+}
+
+@media (min-width: 1300px) {
+    .auth-container {
+        margin-top: 60px;
+    }
+    
+    .auth-header {
+        position: relative;
+        width: 100%;
+        max-width: 580px;
+        margin: 0 auto 20px auto;
+    }
+}
+*/

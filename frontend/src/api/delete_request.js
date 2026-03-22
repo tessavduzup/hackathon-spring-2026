@@ -13,9 +13,11 @@ API.interceptors.request.use((config) => {
     return config
 })
 
-export async function deleteKey(id) {
+export async function deleteKey() {
     try {
-        const response = await API.delete($`api/keys/${id}/delete/`);
+        const id = localStorage.getItem('key_id')
+        const response = await API.delete(`api/keys/${id}/delete/`);
+        console.log(response)
         return response
     } catch (error) {
         throw new Error(error.response?.data?.message || 'Ошибка при удалении ключа')

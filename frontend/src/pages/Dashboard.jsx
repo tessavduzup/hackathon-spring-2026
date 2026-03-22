@@ -6,200 +6,268 @@ import { useAuth } from '../contexts/AuthContext';
 import { getKey } from '../api/post_request';
 import { ERROR_MESSAGE_TIME } from '../utils/DefaultValues';
 import { useNavigate } from 'react-router-dom';
+import AuthLayout from './AuthLayout';
 import { deleteKey } from '../api/delete_request';
+import { FaUser, FaUsers } from 'react-icons/fa';
+import ProtectedContent from '../pages/ProtectedContent';
 
 function Dashboard() {
-  const [key, setKey] = useState(null)
+  const [key, setKey] = useState(null);
   const [timeLeft, setTimeLeft] = useState(null);
   const [isActive, setIsActive] = useState(false);
-  const [isGenerate, setIsGenerate] = useState(false)
-  const [error, setError] = useState('')
+  const [isGenerate, setIsGenerate] = useState(false);
+  const [timerColor, setTimerColor] = useState('#FFFFFF');
+  const [expiryTime, setExpiryTime] = useState(null);
+  const [error, setError] = useState(null); // Добавлен state для error
 
-  const {user, logout} = useAuth()
-  const navigate = useNavigate()
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const generateQRCode = async () => {
-
     if (isActive) {
-      localStorage.removeItem('activeKey');
-      localStorage.removeItem('keyExpiry');
       try {
-        const response = deleteKey(user.id)
-        if (response.data.success) {
-          console.log('Ключ успешно удале')
-        } else {
-          console.error('Ошибка при удалении ключа')
-        }
+        await deleteKey();
       } catch {
-        console.error('Ошибка при удалении ключа')
+        console.error('Ошибка при удалении ключа');
+      } finally {
+        localStorage.removeItem('key_code');
+        localStorage.removeItem('key_id');
+        localStorage.removeItem('keyExpiry');
+        setIsActive(false);
+        setKey(null);
+        setTimeLeft(null);
+        setExpiryTime(null);
       }
-      setIsActive(false)
     }
 
     try {
-      setIsGenerate(true)
-      const response = await getKey()
-      console.log(response)
+      setIsGenerate(true);
+      const response = await getKey();
+      console.log(response);
       if (response.data.success) {
-        setKey(response.data.decoded_qr)
+        const key = response.data.key;
+        setKey(key.key_code);
         const expiryTime = Date.now() + 5 * 60 * 1000;
         setIsActive(true);
-        
-        localStorage.setItem('activeKey', key);
+        setExpiryTime(expiryTime);
+
+        localStorage.setItem('key_code', key.key_code);
+        localStorage.setItem('key_id', key.id);
         localStorage.setItem('keyExpiry', expiryTime);
-        
+
         toast.success('QR-код сгенерирован! Активен 5 минут');
-      } 
-      else {
-        throw new Error('Ошибка при генерации ключа')
+      } else {
+        throw new Error('Ошибка при генерации ключа');
       }
     } catch (error) {
-      toast.error('Ошибка при генерации ключа', {duration: ERROR_MESSAGE_TIME})
+      toast.error('Ошибка при генерации ключа', { duration: ERROR_MESSAGE_TIME });
     } finally {
       setTimeout(() => {
-        setIsGenerate(false)
-      }, ERROR_MESSAGE_TIME)
+        setIsGenerate(false);
+      }, ERROR_MESSAGE_TIME);
     }
   };
 
   useEffect(() => {
-    const savedKey = localStorage.getItem('activeKey');
+    const savedKey = localStorage.getItem('key_code');
+    const savedIdKey = localStorage.getItem('key_id');
     const savedExpiry = localStorage.getItem('keyExpiry');
-    
-    if (savedKey && savedExpiry) {
+
+    if (savedKey && savedExpiry && savedIdKey) {
       const now = Date.now();
-      if (now < parseInt(savedExpiry)) {
+      const expiry = parseInt(savedExpiry);
+      if (now < expiry) {
         setKey(savedKey);
+        setExpiryTime(expiry);
         setIsActive(true);
       } else {
-        localStorage.removeItem('activeKey');
+        localStorage.removeItem('key_code');
+        localStorage.removeItem('key_id');
         localStorage.removeItem('keyExpiry');
       }
     }
   }, []);
 
+  // Отдельный useEffect для обновления таймера
   useEffect(() => {
     if (!isActive || !key) return;
 
-    const interval = setInterval(() => {
-      const expiry = localStorage.getItem('keyExpiry');
-      if (!expiry) {
-        setIsActive(false);
-        setKey(null);
-        setTimeLeft(null);
-        clearInterval(interval);
-        return;
-      }
-
+    const updateTimer = () => {
       const now = Date.now();
-      const remaining = parseInt(expiry) - now;
-      
+      const remaining = expiryTime - now;
+
       if (remaining <= 0) {
+        // Время истекло
         setIsActive(false);
         setKey(null);
         setTimeLeft(null);
-
-        localStorage.removeItem('activeKey');
-        localStorage.removeItem('keyExpiry');
-        
         toast.error('Время действия ключа истекло');
-        try {
-          const response = deleteKey(user.id)
-          if (response.data.success) {
-            console.log('Ключ успешно удалён');
-          } else {
-            throw new Error('Ошибка при удалении')
+        const deleteKeyAsync = async () => {
+          try {
+            await deleteKey();
+          } catch {
+            console.error('Ошибка при удалении ключа');
+          } finally {
+            localStorage.removeItem('key_code');
+            localStorage.removeItem('key_id');
+            localStorage.removeItem('keyExpiry');
           }
-        } catch {
-          console.error('Ошибка при удалении ключа');
-        }
-        clearInterval(interval);
+        };
+        deleteKeyAsync();
       } else {
+        // Обновляем таймер
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
         setTimeLeft(`${minutes}:${seconds.toString().padStart(2, '0')}`);
+
+        // Меняем цвет таймера при остатке меньше 1 минуты
+        if (remaining <= 60000) {
+          setTimerColor('#FF4F12');
+        } else {
+          setTimerColor('#9C27B0');
+        }
       }
-    }, 1000);
+    };
+
+    // Обновляем таймер сразу
+    updateTimer();
+
+    // Устанавливаем интервал
+    const interval = setInterval(updateTimer, 1000);
 
     return () => clearInterval(interval);
-  }, [isActive, key]);
+  }, [isActive, expiryTime, key]);
 
   const handleLogoutClick = () => {
-    logout();    
-    navigate('/login')
+    logout();
+    navigate('/login');
   };
+
   const handleRegisterClick = () => {
-    navigate('/register')
+    navigate('/register');
     toast.success('Приступайте к регистрации!');
   };
 
+  const headerButtons = (
+    <>
+      <button onClick={handleLogoutClick} className="link-button body-m">
+        Выйти
+      </button>
+    </>
+  );
+
   return (
-    <div className="dashboard">
-      <div className="dashboard-header">
-        <div className="user-info">
-          <h2>👋 Добро пожаловать{user ? `, ${user.full_name}` : ''}!</h2>
-          {user && <p className="user-email">{user.email}</p>}
-          {user && <p className={user.role === 1 ? "user-role-admin" : '"user-role-staff"'}>{user.role === 1 ? "Администратор" : "Сотрудник"}</p>}
-
-        </div>
-        <button onClick={handleLogoutClick} className="logout-btn">
-          Выйти
-        </button>
-        <button onClick={handleRegisterClick} className="logout-btn">
-          Регистрация
-        </button>
-      </div>
-
-      {error && <div className="error-message">{error}</div>}
-      <div className="qr-container">
-        {!isActive ? (
-          <div className="qr-placeholder">
-            <button onClick={generateQRCode} className="generate-btn" disabled={isGenerate}>
-              🔘 Сгенерировать QR-код
-            </button>
-            <p className="info-text">
-              После генерации QR-код будет активен 5 минут
-            </p>
-          </div>
-        ) : (
-          <div className="qr-active">
-            <div className="qr-code">
-              <QRCodeSVG 
-                value={key} 
-                size={250}
-                bgColor="#ffffff"
-                fgColor="#000000"
-                level="H"
-                includeMargin={true}
-              />
-            </div>
-            
-            <div className="qr-info">
-              <div className="timer">
-                ⏱️ Осталось времени: <strong>{timeLeft}</strong>
+    <ProtectedContent>
+      <AuthLayout
+        user={user?.full_name}
+        email={user?.email}
+        headerButtons={headerButtons}
+      >
+        <div className="dashboard-page">
+          <div className="dashboard-header">
+            <div className="dashboard-user-info">
+              <h2 className="heading-h2">Добро пожаловать{user ? `, ${user.full_name}` : ''}!</h2>
+              {user && <p className="dashboard-user-email description-l">{user.email}</p>}
+              <p className={user?.role === 1 ? "dashboard-user-role-admin description-l-strong" : "dashboard-user-role-staff description-l-strong"}>
+                {user?.role === 1 ? (
+                  <>
+                    <FaUser style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                    Администратор
+                  </>
+                ) : (
+                  <>
+                    <FaUsers style={{ marginRight: '8px', verticalAlign: 'middle' }} />
+                    Сотрудник
+                  </>
+                )}
+              </p>
+              <div className="dashboard-header-buttons">
+                {user?.role === 1 && (
+                  <button onClick={handleRegisterClick} className="dashboard-btn body-m-strong">
+                    Регистрация нового пользователя
+                  </button>
+                )}
               </div>
-              <button 
-                onClick={generateQRCode} 
-                className="get-new-btn"
-                disabled={isGenerate}
-              >
-                🔄 Сгенерировать новый
-              </button>
             </div>
           </div>
-        )}
-      </div>
-
-      <div className="info-panel">
-        <h3>📌 Информация</h3>
-        <ul>
-          <li>✅ QR-код активен 5 минут</li>
-          <li>✅ При сканировании передается уникальный ключ</li>
-          <li>✅ После сканирования ключ удаляется и нужно сгенерировать новый</li>
-          <li>✅ Также после истечения времени нужно сгенерировать новый код</li>
-        </ul>
-      </div>
-    </div>
+          {error && <div className="dashboard-error-message description-m">{error}</div>}
+          <div className="dashboard-qr-container">
+            <div className={`dashboard-qr-wrapper ${isActive ? 'active' : ''}`}>
+              {!isActive ? (
+                <div className="dashboard-qr-placeholder">
+                  <h1 className="heading-h1">Генерация пропуска</h1>
+                  <p className="dashboard-info-text body-m">
+                    ⓘ После нажатия на кнопку вам будет предоставлен уникальный одноразовый пропуск в виде QR-кода. Приложите его на входе к сканеру чтобы пройти.
+                  </p>
+                  <p className="dashboard-info-text body-m" style={{ color: '#FF4F12' }}>
+                    ⚠︎ Пропуск действует 5 минут. По истечении срока действия пропуска необходимо выпустить новый
+                  </p>
+                  <button
+                    onClick={generateQRCode}
+                    className="orange-button body-m-strong"
+                    disabled={isGenerate}
+                  >
+                    {isGenerate ? 'Генерация...' : 'Сгенерировать QR-код'}
+                  </button>
+                </div>
+              ) : (
+                <div className="dashboard-qr-active">
+                  <div className="dashboard-qr-code">
+                    <QRCodeSVG
+                      value={key}
+                      size={280}
+                      bgColor="#ffffff"
+                      fgColor="#9C27B0"
+                      level="H"
+                      includeMargin={true}
+                      style={{
+                        width: '100%',
+                        height: 'auto',
+                        maxWidth: '280px',
+                        borderRadius: '16px',
+                      }}
+                    />
+                  </div>
+                  <div className="dashboard-qr-info">
+                    {timeLeft && (
+                      <div
+                        className="dashboard-timer"
+                        style={{
+                          backgroundColor: timerColor === '#FF4F12' ? 'rgba(255, 79, 18, 0.15)' : 'rgba(156, 39, 176, 0.1)',
+                          border: `2px solid ${timerColor}`,
+                          padding: '12px 24px',
+                          borderRadius: '12px',
+                          textAlign: 'center',
+                          marginBottom: '20px',
+                          minWidth: '200px'
+                        }}
+                      >
+                        <span className="body-m" style={{ marginRight: '8px' }}>Осталось времени:</span>
+                        <strong style={{ color: timerColor, fontSize: '1.3rem', fontWeight: 'bold' }}>
+                          {timeLeft}
+                        </strong>
+                      </div>
+                    )}
+                    <button
+                      onClick={generateQRCode}
+                      className="orange-button body-m-strong"
+                      disabled={isGenerate}
+                      style={{
+                        minWidth: '220px',
+                        padding: '12px 28px',
+                        fontSize: '1rem'
+                      }}
+                    >
+                      {isGenerate ? 'Генерация...' : 'Сгенерировать новый QR-код'}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </AuthLayout>
+    </ProtectedContent>
   );
 }
 

@@ -1,232 +1,388 @@
-.dashboard {
-  max-width: 800px;
+h1 {
+  color: white;
+}
+
+h2 {
+  color: white;
+}
+
+/* Основной контейнер */
+.dashboard-page {
+  margin-top: 90px;
+  position: relative;
   width: 100%;
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  min-height: 100vh;
+  background: linear-gradient(120.23deg, #5A018A 37.88%, #670F51 100%);
+  padding: 20px 40px;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
-.dashboard-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
-  padding-bottom: 20px;
-  border-bottom: 2px solid #f0f0f0;
-}
-
-.user-info h2 {
-  color: #333;
-  margin-bottom: 5px;
-}
-
-.user-email {
-  color: #666;
-  font-size: 14px;
-}
-
-.logout-btn {
-  padding: 8px 20px;
-  background: #f0f0f0;
-  border: none;
-  border-radius: 8px;
+/* Кнопки */
+.dashboard-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #FFFFFF;
   cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  color: white;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+  color: #e04510;
+}
+
+/* Блок с приветствием */
+.dashboard-welcome {
+  text-align: left;
+  margin: 40px;
+}
+
+.dashboard-welcome h2 {
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.dashboard-user-email {
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 4px;
+}
+
+.dashboard-user-role-admin {
+  color: #FF4F12;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
-  transition: all 0.3s;
+  font-weight: 500;
 }
 
-.logout-btn:hover {
-  background: #e0e0e0;
-  transform: translateY(-1px);
+.dashboard-user-role-staff {
+  color: #82EA00;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.qr-container {
-  margin: 30px 0;
+/* Кнопка регистрации */
+.dashboard-register-btn {
+  background: #FF4F12;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 24px;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.dashboard-register-btn:hover {
+  background: #e04510;
+  transform: translateY(-2px);
+}
+
+/* Центральный контейнер для QR */
+.dashboard-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 200px);
+}
+
+/* Контейнер QR-кода */
+.dashboard-qr-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Плейсхолдер для QR (до генерации) */
+.dashboard-qr-placeholder {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 60px 40px;
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Активный QR-код */
+.dashboard-qr-active {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
   padding: 40px;
-  background: #fafafa;
-  border-radius: 15px;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+}
+
+/* Обертка QR-кода */
+.dashboard-qr-code {
+  background: #FFFFFF;
+  padding: 20px;
+  border-radius: 16px;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+/* Информация под QR */
+.dashboard-qr-info {
   text-align: center;
 }
 
-.qr-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+/* Таймер */
+.dashboard-timer {
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  margin-bottom: 20px;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
 }
 
-.generate-btn {
-  padding: 15px 40px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+.dashboard-timer strong {
+  color: #FF4F12;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+/* Кнопка генерации QR */
+.dashboard-generate-btn {
+  background: #FF4F12;
   border: none;
-  border-radius: 50px;
+  border-radius: 12px;
+  padding: 14px 28px;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  transition: all 0.2s;
+  margin-bottom: 16px;
 }
 
-.generate-btn:hover {
+.dashboard-generate-btn:hover:not(:disabled) {
+  background: #e04510;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
 }
 
-.generate-btn:active {
+.dashboard-generate-btn:active:not(:disabled) {
   transform: translateY(0);
 }
 
-.info-text {
-  color: #666;
+.dashboard-generate-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Кнопка "Сгенерировать новый" */
+.dashboard-get-new-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 10px;
+  padding: 10px 20px;
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
   font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.qr-active {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
+.dashboard-get-new-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
 }
 
-.qr-code {
-  background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+.dashboard-get-new-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
-.qr-info {
-  width: 100%;
+/* Информационный текст */
+.dashboard-info-text {
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+/* Сообщение об ошибке */
+.dashboard-error-message {
+  color: #d90707;
+  background: rgba(255, 142, 142, 0.7);
+  padding: 10px 16px;
+  border-radius: 8px;
+  border-left: 3px solid #d90707;
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  margin-bottom: 20px;
+  backdrop-filter: blur(4px);
+  max-width: 500px;
+  margin: 0 auto 20px;
   text-align: center;
-  margin-top: 10px;
 }
 
-.timer {
+/* Информационная панель внизу */
+.dashboard-info-panel {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px 30px;
+  margin-top: 40px;
+  width: 100%;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.dashboard-info-panel h3 {
+  color: #FFFFFF;
+  font-family: 'Inter', sans-serif;
   font-size: 20px;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-.timer strong {
-  color: #667eea;
-  font-size: 24px;
-}
-
-.key-value {
-  background: #f5f5f5;
-  padding: 12px;
-  border-radius: 10px;
-  margin: 15px 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.key-label {
   font-weight: 600;
-  color: #555;
+  margin-bottom: 16px;
 }
 
-.key-value code {
-  background: white;
-  padding: 5px 10px;
-  border-radius: 5px;
-  font-family: monospace;
-  font-size: 14px;
-  color: #667eea;
-  word-break: break-all;
-}
-
-.copy-btn {
-  padding: 5px 10px;
-  background: #e0e0e0;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
-}
-
-.copy-btn:hover {
-  background: #d0d0d0;
-}
-
-.generate-new-btn {
-  padding: 10px 30px;
-  background: white;
-  border: 2px solid #667eea;
-  color: #667eea;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.generate-new-btn:hover {
-  background: #667eea;
-  color: white;
-}
-
-.info-panel {
-  margin-top: 30px;
-  padding: 20px;
-  background: #f8f9fa;
-  border-radius: 10px;
-}
-
-.info-panel h3 {
-  color: #333;
-  margin-bottom: 15px;
-}
-
-.info-panel ul {
+.dashboard-info-panel ul {
   list-style: none;
   padding: 0;
 }
 
-.info-panel li {
-  padding: 8px 0;
-  color: #555;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.dashboard-info-panel li {
+  color: rgba(255, 255, 255, 0.9);
+  font-family: 'Inter', sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  margin-bottom: 10px;
+  padding-left: 24px;
+  position: relative;
 }
 
-.info-panel li:before {
-  content: "🔹";
-  color: #667eea;
+.dashboard-info-panel li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #82EA00;
+  font-weight: bold;
 }
 
-@media (max-width: 600px) {
-  .dashboard {
-    padding: 20px;
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
+@media (max-width: 767px) {
+  .dashboard-page {
+    padding: 16px 20px;
   }
-  
-  .dashboard-header {
+
+  .dashboard-top-bar {
     flex-direction: column;
-    text-align: center;
-    gap: 15px;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 30px;
   }
-  
-  .qr-container {
-    padding: 20px;
-  }
-  
-  .qr-code svg {
-    width: 200px;
-    height: 200px;
-  }
-  
-  .timer {
-    font-size: 16px;
-  }
-  
-  .timer strong {
+
+  .dashboard-welcome h2 {
     font-size: 20px;
+  }
+
+  .dashboard-user-email,
+  .dashboard-user-role-admin,
+  .dashboard-user-role-staff {
+    font-size: 12px;
+  }
+
+  .dashboard-register-btn {
+    padding: 8px 20px;
+    font-size: 13px;
+  }
+
+  .dashboard-center {
+    min-height: calc(100vh - 250px);
+  }
+
+  .dashboard-qr-placeholder {
+    padding: 40px 20px;
+    max-width: 100%;
+  }
+
+  .dashboard-qr-active {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
+
+  .dashboard-qr-code svg {
+    width: 180px;
+    height: 180px;
+  }
+
+  .dashboard-timer {
+    font-size: 14px;
+  }
+
+  .dashboard-timer strong {
+    font-size: 18px;
+  }
+
+  .dashboard-generate-btn {
+    font-size: 16px;
+    padding: 12px 24px;
+  }
+
+  .dashboard-info-panel {
+    padding: 18px 20px;
+    margin-top: 30px;
+  }
+
+  .dashboard-info-panel h3 {
+    font-size: 18px;
+  }
+
+  .dashboard-info-panel li {
+    font-size: 12px;
+  }
+}
+
+/* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
+@media (max-width: 480px) {
+  .dashboard-page {
+    padding: 12px 16px;
+  }
+
+  .dashboard-welcome h2 {
+    font-size: 18px;
+  }
+
+  .dashboard-qr-code svg {
+    width: 150px;
+    height: 150px;
+  }
+
+  .dashboard-generate-btn {
+    font-size: 14px;
+    padding: 10px 20px;
+  }
+
+  .dashboard-get-new-btn {
+    font-size: 12px;
+    padding: 8px 16px;
   }
 }

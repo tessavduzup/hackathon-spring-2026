@@ -1,0 +1,216 @@
+:root {
+  /* Шрифт */
+  --font-family: 'Rostelecom Basis', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  
+  /* Display (промо заголовки) */
+  --display-l-font-size: 48px;
+  --display-l-line-height: 52px;
+  --display-l-font-weight: 500;
+  
+  --display-l-strong-font-weight: 700;
+  
+  --display-m-font-size: 42px;
+  --display-m-line-height: 44px;
+  
+  --display-s-font-size: 32px;
+  --display-s-line-height: 44px;
+  
+  /* Heading (заголовки) */
+  --heading-h1-font-size: 28px;
+  --heading-h1-line-height: 32px;
+  --heading-h1-font-weight: 700;
+  
+  --heading-h2-font-size: 22px;
+  --heading-h2-line-height: 24px;
+  
+  --heading-h3-font-size: 18px;
+  --heading-h3-line-height: 20px;
+  
+  --heading-h4-font-size: 16px;
+  --heading-h4-line-height: 20px;
+  
+  --heading-h5-font-size: 14px;
+  --heading-h5-line-height: 20px;
+  
+  /* Body (основной текст) */
+  --body-l-font-size: 18px;
+  --body-l-line-height: 26px;
+  --body-l-font-weight: 400;
+  
+  --body-l-strong-font-weight: 500;
+  
+  --body-m-font-size: 16px;
+  --body-m-line-height: 24px;
+  
+  --body-s-font-size: 14px;
+  --body-s-line-height: 20px;
+  
+  /* Description (вспомогательный текст) */
+  --description-l-font-size: 12px;
+  --description-l-line-height: 16px;
+  --description-l-font-weight: 400;
+  
+  --description-l-strong-font-weight: 500;
+  
+  --description-m-font-size: 11px;
+  --description-m-line-height: 16px;
+  --description-m-letter-spacing: 0.2px;
+  
+  --description-s-font-size: 10px;
+  --description-s-line-height: 12px;
+  --description-s-letter-spacing: 0.4px;
+}
+/* frontend/src/styles/typography.css (продолжение) */
+
+/* Базовые стили для body */
+body {
+  font-family: var(--font-family);
+  font-size: var(--body-m-font-size);
+  line-height: var(--body-m-line-height);
+}
+
+/* Display стили */
+.display-l {
+  font-size: var(--display-l-font-size);
+  line-height: var(--display-l-line-height);
+  font-weight: var(--display-l-font-weight);
+}
+
+.display-l-strong {
+  font-size: var(--display-l-font-size);
+  line-height: var(--display-l-line-height);
+  font-weight: var(--display-l-strong-font-weight);
+}
+
+.display-m {
+  font-size: var(--display-m-font-size);
+  line-height: var(--display-m-line-height);
+  font-weight: var(--display-l-font-weight);
+}
+
+.display-m-strong {
+  font-size: var(--display-m-font-size);
+  line-height: var(--display-m-line-height);
+  font-weight: var(--display-l-strong-font-weight);
+}
+
+.display-s {
+  font-size: var(--display-s-font-size);
+  line-height: var(--display-s-line-height);
+  font-weight: var(--display-l-font-weight);
+}
+
+.display-s-strong {
+  font-size: var(--display-s-font-size);
+  line-height: var(--display-s-line-height);
+  font-weight: var(--display-l-strong-font-weight);
+}
+
+/* Heading стили */
+.heading-h1 {
+  font-size: var(--heading-h1-font-size);
+  line-height: var(--heading-h1-line-height);
+  font-weight: var(--heading-h1-font-weight);
+}
+
+.heading-h2 {
+  font-size: var(--heading-h2-font-size);
+  line-height: var(--heading-h2-line-height);
+  font-weight: var(--heading-h1-font-weight);
+}
+
+.heading-h3 {
+  font-size: var(--heading-h3-font-size);
+  line-height: var(--heading-h3-line-height);
+  font-weight: var(--heading-h1-font-weight);
+}
+
+.heading-h4 {
+  font-size: var(--heading-h4-font-size);
+  line-height: var(--heading-h4-line-height);
+  font-weight: var(--heading-h1-font-weight);
+}
+
+.heading-h5 {
+  font-size: var(--heading-h5-font-size);
+  line-height: var(--heading-h5-line-height);
+  font-weight: var(--heading-h1-font-weight);
+}
+
+/* Body стили */
+.body-l {
+  font-size: var(--body-l-font-size);
+  line-height: var(--body-l-line-height);
+  font-weight: var(--body-l-font-weight);
+}
+
+.body-l-strong {
+  font-size: var(--body-l-font-size);
+  line-height: var(--body-l-line-height);
+  font-weight: var(--body-l-strong-font-weight);
+}
+
+.body-m {
+  font-size: var(--body-m-font-size);
+  line-height: var(--body-m-line-height);
+  font-weight: var(--body-l-font-weight);
+}
+
+.body-m-strong {
+  font-size: var(--body-m-font-size);
+  line-height: var(--body-m-line-height);
+  font-weight: var(--body-l-strong-font-weight);
+}
+
+.body-s {
+  font-size: var(--body-s-font-size);
+  line-height: var(--body-s-line-height);
+  font-weight: var(--body-l-font-weight);
+}
+
+.body-s-strong {
+  font-size: var(--body-s-font-size);
+  line-height: var(--body-s-line-height);
+  font-weight: var(--body-l-strong-font-weight);
+}
+
+/* Description стили */
+.description-l {
+  font-size: var(--description-l-font-size);
+  line-height: var(--description-l-line-height);
+  font-weight: var(--description-l-font-weight);
+}
+
+.description-l-strong {
+  font-size: var(--description-l-font-size);
+  line-height: var(--description-l-line-height);
+  font-weight: var(--description-l-strong-font-weight);
+}
+
+.description-m {
+  font-size: var(--description-m-font-size);
+  line-height: var(--description-m-line-height);
+  font-weight: var(--description-l-font-weight);
+  letter-spacing: var(--description-m-letter-spacing);
+}
+
+.description-m-strong {
+  font-size: var(--description-m-font-size);
+  line-height: var(--description-m-line-height);
+  font-weight: var(--description-l-strong-font-weight);
+  letter-spacing: var(--description-m-letter-spacing);
+}
+
+.description-s {
+  font-size: var(--description-s-font-size);
+  line-height: var(--description-s-line-height);
+  font-weight: var(--description-l-font-weight);
+  letter-spacing: var(--description-s-letter-spacing);
+}
+
+.description-s-strong {
+  font-size: var(--description-s-font-size);
+  line-height: var(--description-s-line-height);
+  font-weight: var(--description-l-strong-font-weight);
+  letter-spacing: var(--description-s-letter-spacing);
+}

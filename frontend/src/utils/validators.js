@@ -33,7 +33,7 @@ export const validateFIO = (value) => {
     if (value.length < 2) {
         return {success: false, error: 'Минимум 2 символа'};
     } else if (!/^[А-ЯЁ][а-яА-ЯёЁ]+$/.test(value)) {
-        return {success: false, error: 'Может содержать только буквы, пробелы и дефисы'};
+        return {success: false, error: 'Может содержать только русские буквы, пробелы и дефисы'};
     }
     return {success: true};
 };

@@ -1,77 +1,306 @@
-.checkbox-label {
-  display: inline-block;
-}
-
-div:has(> form){
-  width: min(100%, 560px);
-  margin: 40px auto;
-  padding: 28px;
-  background: #fff;
-  color: var(--text);
-  border-radius: var(--radius);
-  box-shadow: 0 18px 50px rgba(17,24,39,.08);
-}
-
-/* Заголовок, если есть */
-div:has(> form) > h1{
-  font-size: 28px;
-  font-weight: 800;
-  letter-spacing: .2px;
-  margin: 0 0 20px;
-}
-
-/* Сообщения submit */
-.submitSuccess, .submitErrors{
-  margin: 0 0 14px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  font-size: 14px;
-  border: 1px solid;
-}
-.submitSuccess{ background:#f0fdf4; color:#166534; border-color:#bbf7d0; }
-.submitErrors{ background:#fef2f2; color:#991b1b; border-color:#fecaca; }
-
-/* Форма: компактная сетка без изменений JSX */
-form{ display: grid; gap: 3px; }
-
-/* Инпуты без классов */
-form input[type="text"],
-form input[type="email"],
-form input[type="password"]{
+/* Основной контейнер страницы */
+.register-page {
+  position: relative;
   width: 100%;
-  padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #fff;
-  color: var(--text);
-  outline: none;
-  transition: border-color .15s, box-shadow .15s;
-}
-form input:focus{
-  border-color: var(--orange);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--orange) 18%, transparent);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-/* Низ: «Уже есть аккаунт?» */
-div:has(> form) > h3:last-of-type{
-  margin: 16px 0 6px;
+/* Хедер с кнопкой выхода */
+.register-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 100;
+  background: transparent;
+}
+
+.exit-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s;
   font-size: 14px;
-  font-weight: 500;
-  color: var(--muted);
-}
-div:has(> form) > a{
-  color: var(--purple);
-  font-weight: 600;
-  text-decoration: none;
-}
-div:has(> form) > a:hover{
-  color: var(--orange);
-  text-decoration: underline;
 }
 
+.exit-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
 
-/* Адаптив */
-@media (max-width: 480px){
-  div:has(> form){ margin: 40px auto; padding: 22px; }
-  div:has(> form) > h1{ font-size: 24px; }
+/* Контейнер для контента страницы регистрации */
+.register-content {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 20px 40px;
+  min-height: 100vh;
+}
+
+/* Контейнер формы регистрации */
+.register-container {
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 24px;
+  padding: 40px 32px;
+  width: 900px;
+  max-width: 100%;
+  backdrop-filter: blur(2px);
+}
+
+/* Заголовок формы */
+.register-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #FFFFFF;
+  line-height: 32px;
+}
+
+/* Форма - сетка на два столбца */
+.register-container form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px 24px;
+}
+
+/* Кнопка отправки и чекбокс занимают всю ширину */
+.register-container .register-form-group:has(button),
+.register-container .register-form-group:last-of-type:has(input[type="checkbox"]) {
+  grid-column: span 2;
+}
+
+/* Группа полей формы */
+.register-form-group {
+  position: relative;
+  margin-bottom: 0;
+  margin-top: 0;
+}
+
+/* Метки полей */
+.register-form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #FFFFFF;
+}
+
+/* Чекбокс */
+.register-form-group:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 8px;
+}
+
+.register-form-group:has(input[type="checkbox"]) label {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  cursor: pointer;
+  gap: 8px;
+}
+
+.register-form-group:has(input[type="checkbox"]) input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+  accent-color: #FF4F12;
+}
+
+/* Поля ввода */
+.register-form-group input:not([type="checkbox"]) {
+  width: 100%;
+  padding: 11px 0 12px 16px;
+  background: #D9D9D9;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  font-size: 16px;
+  color: #848484;
+  outline: none;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.register-form-group input:not([type="checkbox"])::placeholder {
+  color: #848484;
+}
+
+.register-form-group input:not([type="checkbox"]):focus {
+  border-color: #FF4F12;
+  background: #FFFFFF;
+}
+
+.register-form-group input.error {
+  border-color: #FF4444;
+  background: #FFF0F0;
+}
+
+/* Сообщения об ошибках */
+.error-message {
+  color: #d90707;
+  margin-top: 4px;
+  background: rgba(255, 142, 142, 0.7);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #d90707;
+  backdrop-filter: blur(4px);
+  font-size: 12px;
+}
+
+.error-message:empty {
+  display: none;
+}
+
+/* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1280px и выше) ========== */
+@media (min-width: 1280px) {
+  .register-container {
+    width: 1000px;
+    padding: 48px 48px;
+  }
+
+  .register-container h2 {
+    font-size: 32px;
+    margin-bottom: 36px;
+  }
+
+  .register-container form {
+    gap: 24px 32px;
+  }
+
+  .register-form-group label {
+    font-size: 16px;
+  }
+
+  .register-form-group input:not([type="checkbox"]) {
+    font-size: 18px;
+    padding: 12px 0 13px 18px;
+  }
+
+  .exit-btn {
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+}
+
+/* ========== ПЛАНШЕТЫ (768px - 1279px) ========== */
+@media (min-width: 768px) and (max-width: 1279px) {
+  .register-container {
+    width: 90%;
+    padding: 40px 32px;
+  }
+
+  .register-container h2 {
+    font-size: 28px;
+    margin-bottom: 28px;
+  }
+
+  .register-container form {
+    gap: 18px 24px;
+  }
+
+  .register-form-group label {
+    font-size: 14px;
+  }
+}
+
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
+@media (max-width: 767px) {
+  .register-header {
+    padding: 15px 20px;
+  }
+
+  .register-content {
+    padding: 70px 15px 30px;
+  }
+
+  .register-container {
+    width: 100%;
+    padding: 24px 20px;
+  }
+
+  /* На мобилках форма в один столбик */
+  .register-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .register-container h2 {
+    font-size: 24px;
+    margin-bottom: 24px;
+  }
+
+  .register-form-group {
+    width: 100%;
+  }
+
+  .register-form-group label {
+    font-size: 13px;
+    margin-bottom: 6px;
+  }
+
+  .register-form-group input:not([type="checkbox"]) {
+    font-size: 14px;
+    padding: 10px 0 10px 14px;
+  }
+
+  .exit-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  .register-form-group:has(input[type="checkbox"]) {
+    margin-top: 0;
+  }
+}
+
+/* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
+@media (max-width: 480px) {
+  .register-header {
+    padding: 12px 15px;
+  }
+
+  .register-content {
+    padding: 65px 12px 25px;
+  }
+
+  .register-container {
+    padding: 20px 16px;
+  }
+
+  .register-container h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .register-container form {
+    gap: 14px;
+  }
+
+  .register-form-group label {
+    font-size: 12px;
+  }
+
+  .register-form-group input:not([type="checkbox"]) {
+    font-size: 13px;
+    padding: 8px 0 8px 12px;
+  }
+
+  .error-message {
+    font-size: 10px;
+    padding: 3px 8px;
+  }
+
+  .exit-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
 }
