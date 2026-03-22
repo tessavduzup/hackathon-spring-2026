@@ -17,14 +17,14 @@ urlpatterns = [
     path('api/change-password/', views.ChangePasswordView.as_view(), name='change_password'),
 
     path('api/users/', views.UserListView.as_view(), name='user_list'),
-    path('api/users/create/', views.user_create, name='user_create'),
+    path('api/users/create/', views.UserCreateView.as_view(), name='user_create'),
     path('api/users/<int:user_id>/', views.UserDetailView.as_view(), name='user_detail'),
-    path('api/users/<int:user_id>/update/', views.user_update, name='user_update'),
-    path('api/users/<int:user_id>/delete/', views.user_delete, name='user_delete'),
+    path('api/users/<int:user_id>/update/', views.UserUpdateView.as_view(), name='user_update'),
+    path('api/users/<int:user_id>/delete/', views.UserDeleteView.as_view(), name='user_delete'),
     path('api/users/active/', views.ActiveUserListView.as_view(), name='active_user_list'),
 
-    path('api/keys/', views.key_list, name='key_list'),
-    path('api/keys/<int:key_id>/', views.key_detail, name='key_detail'),
+    path('api/keys/', views.KeyListView.as_view(), name='key_list'),
+    path('api/keys/<int:key_id>/', views.KeyDetailView.as_view(), name='key_detail'),
     path('api/keys/create/', views.KeyCreateView.as_view(), name='key_create'),
-    path('api/keys/<int:key_id>/delete/', views.key_delete, name='key_delete'),
+    path('api/keys/<int:key_id>/delete/', views.KeyDeleteView.as_view(), name='key_delete'),
 ]
