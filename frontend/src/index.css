@@ -1,0 +1,30 @@
+/* Кнопка */
+.orange-button {
+  width: 100%;
+  padding: 11px 0 12px;
+  background: #FF4F12;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  line-height: 24px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.orange-button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+  border-color: #FFFFFF;
+}
+
+.orange-button:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #FFFFFF;
+  transform: translateY(0);
+}
+
+.orange-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

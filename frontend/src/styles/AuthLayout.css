@@ -112,8 +112,8 @@
 /* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1300px и выше) ========== */
 @media (min-width: 1300px) {
     .auth-ellipse-1 {
-        width: 179px;
-        height: 179px;
+        width: 300px;
+        height: 300px;
         left: 120px;
         top: calc(60% - 100px);
     }
@@ -264,18 +264,6 @@
         right: 15px;
         top: 28%;
     }
-
-    .auth-gen {
-        font-size: 9px;
-    }
-
-    .auth-copyright {
-        font-size: 9px;
-    }
-
-    .auth-support {
-        font-size: 9px;
-    }
 }
 
 /* ========== ВЫСОКИЕ ЭКРАНЫ НА МОБИЛКЕ ========== */
@@ -312,3 +300,127 @@
 .auth-page::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 255, 255, 0.5);
 }
+
+/* Кнопка выхода в хедере */
+.auth-header .dashboard-btn {
+    /* Позиционирование */
+    position: relative;
+    z-index: 10;
+    
+    /* Стили кнопки */
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    padding: 8px 24px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    
+    /* Текст */
+    color: #FFFFFF;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.auth-header .dashboard-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.auth-header .dashboard-btn:active {
+    transform: translateY(0);
+}
+
+/* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1300px и выше) ========== */
+@media (min-width: 1300px) {
+    .auth-header {
+        position: absolute;
+        top: 30px;
+        right: 40px;
+        left: auto;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        z-index: 3;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 10px 32px;
+        font-size: 16px;
+    }
+}
+
+/* ========== ПЛАНШЕТЫ (768px - 1299px) ========== */
+@media (min-width: 768px) and (max-width: 1299px) {
+    .auth-header {
+        position: absolute;
+        top: 25px;
+        right: 30px;
+        left: auto;
+        z-index: 3;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 8px 24px;
+        font-size: 14px;
+    }
+}
+
+/* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
+@media (max-width: 767px) {
+    .auth-header {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        left: auto;
+        z-index: 3;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 6px 18px;
+        font-size: 12px;
+    }
+}
+
+/* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
+@media (max-width: 480px) {
+    .auth-header {
+        top: 15px;
+        right: 15px;
+    }
+    
+    .auth-header .dashboard-btn {
+        padding: 5px 14px;
+        font-size: 11px;
+    }
+}
+
+/* Альтернативный вариант: если нужно, чтобы кнопка была именно над формой,
+ * а не просто в углу, раскомментируйте этот блок и закомментируйте верхний */
+/*
+.auth-header {
+    position: absolute;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    z-index: 3;
+}
+
+@media (min-width: 1300px) {
+    .auth-container {
+        margin-top: 60px;
+    }
+    
+    .auth-header {
+        position: relative;
+        width: 100%;
+        max-width: 580px;
+        margin: 0 auto 20px auto;
+    }
+}
+*/

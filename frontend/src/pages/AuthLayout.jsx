@@ -1,8 +1,15 @@
-// frontend/src/components/AuthLayout.jsx
 import React from 'react';
 import './../styles/AuthLayout.css';
 
-const AuthLayout = ({ children, user, email, headerButtons }) => {
+/**
+ * AuthLayout - компонент обертка для страниц аутентификации
+ * @param {Object} props - свойства компонента
+ * @param {React.ReactNode} props.children - дочерние элементы (основной контент страницы)
+ * @param {string} props.user - имя пользователя (зарезервировано, пока не используется)
+ * @param {string} props.email - email пользователя (зарезервировано, пока не используется)
+ * @param {React.ReactNode} props.headerButtons - кнопки для отображения в правой части хедера
+ */
+const AuthLayout = ({ children, headerButtons }) => {
     return (
         <div className="auth-page">
             {/* Декоративные элементы */}
@@ -19,7 +26,7 @@ const AuthLayout = ({ children, user, email, headerButtons }) => {
             {/* Хэдер с дополнительными кнопками */}
             <div className="auth-header">
                 {headerButtons && (
-                    <div className="auth-header-buttons body-s">
+                    <div className="dashboard-btn body-m-strong">
                         {headerButtons}
                     </div>
                 )}

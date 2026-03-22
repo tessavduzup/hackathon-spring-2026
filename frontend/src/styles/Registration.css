@@ -1,26 +1,58 @@
-/* frontend/src/styles/Registration.css */
-
-/* Контейнер для контента страницы регистрации - уникальный класс */
-.register-content {
+/* Основной контейнер страницы */
+.register-page {
   position: relative;
   width: 100%;
   min-height: 100vh;
   display: flex;
+  flex-direction: column;
+}
+
+/* Хедер с кнопкой выхода */
+.register-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 100;
+  background: transparent;
+}
+
+.exit-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  padding: 8px 16px;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.exit-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Контейнер для контента страницы регистрации */
+.register-content {
+  flex: 1;
+  display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 2;
-  padding: 40px 0;
+  padding: 80px 20px 40px;
+  min-height: 100vh;
 }
 
 /* Контейнер формы регистрации */
 .register-container {
-  position: absolute;
   background-color: rgba(255, 255, 255, 0.4);
   border-radius: 24px;
-  z-index: 2;
   padding: 40px 32px;
   width: 900px;
-  max-width: 95%;
+  max-width: 100%;
   backdrop-filter: blur(2px);
 }
 
@@ -32,29 +64,6 @@
   line-height: 32px;
 }
 
-/* Кнопка выхода */
-.back-btn-div {
-  text-align: right;
-  margin-bottom: 20px;
-}
-
-.exit-btn {
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: 8px;
-  padding: 8px 16px;
-  color: #FFFFFF;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.exit-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
-}
-
 /* Форма - сетка на два столбца */
 .register-container form {
   display: grid;
@@ -62,7 +71,7 @@
   gap: 20px 24px;
 }
 
-/* Кнопка и чекбокс занимают всю ширину */
+/* Кнопка отправки и чекбокс занимают всю ширину */
 .register-container .register-form-group:has(button),
 .register-container .register-form-group:last-of-type:has(input[type="checkbox"]) {
   grid-column: span 2;
@@ -80,9 +89,6 @@
   display: block;
   margin-bottom: 8px;
   color: #FFFFFF;
-  font-family: 'Inter', sans-serif;
-  font-size: 14px;
-  font-weight: 500;
 }
 
 /* Чекбокс */
@@ -116,16 +122,14 @@
   background: #D9D9D9;
   border-radius: 10px;
   border: 2px solid transparent;
-  font-family: 'Inter', sans-serif;
   font-size: 16px;
-  line-height: 24px;
   color: #848484;
   outline: none;
   transition: all 0.2s;
+  box-sizing: border-box;
 }
 
 .register-form-group input:not([type="checkbox"])::placeholder {
-  font-family: 'Inter', sans-serif;
   color: #848484;
 }
 
@@ -140,53 +144,19 @@
 }
 
 /* Сообщения об ошибках */
-.register-error-message {
+.error-message {
   color: #d90707;
   margin-top: 4px;
   background: rgba(255, 142, 142, 0.7);
   padding: 4px 10px;
   border-radius: 6px;
   border-left: 3px solid #d90707;
-  font-family: 'Inter', sans-serif;
-  font-size: 12px;
-  line-height: 15px;
   backdrop-filter: blur(4px);
+  font-size: 12px;
 }
 
-.register-error-message:empty {
+.error-message:empty {
   display: none;
-}
-
-/* Кнопка регистрации */
-.register-button {
-  width: 100%;
-  padding: 11px 0 12px;
-  background: #FF4F12;
-  border-radius: 10px;
-  border: 2px solid transparent;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 24px;
-  color: #FFFFFF;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 10px;
-}
-
-.register-button:hover:not(:disabled) {
-  background: rgba(255, 79, 18, 0.85);
-  transform: translateY(-1px);
-  border-color: #FFFFFF;
-}
-
-.register-button:active:not(:disabled) {
-  transform: translateY(0);
-}
-
-.register-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
 }
 
 /* ========== ДЕСКТОПНАЯ ВЕРСИЯ (1280px и выше) ========== */
@@ -214,9 +184,9 @@
     padding: 12px 0 13px 18px;
   }
 
-  .register-button {
-    font-size: 20px;
-    padding: 12px 0 13px;
+  .exit-btn {
+    padding: 10px 20px;
+    font-size: 16px;
   }
 }
 
@@ -243,15 +213,17 @@
 
 /* ========== МОБИЛЬНАЯ ВЕРСИЯ (до 767px) ========== */
 @media (max-width: 767px) {
+  .register-header {
+    padding: 15px 20px;
+  }
+
   .register-content {
-    padding: 20px 0;
-    width: 400px;
+    padding: 70px 15px 30px;
   }
 
   .register-container {
-    width: 95%;
+    width: 100%;
     padding: 24px 20px;
-    margin-top: 60px;
   }
 
   /* На мобилках форма в один столбик */
@@ -280,11 +252,6 @@
     padding: 10px 0 10px 14px;
   }
 
-  .register-button {
-    font-size: 16px;
-    padding: 10px 0;
-  }
-
   .exit-btn {
     padding: 6px 12px;
     font-size: 12px;
@@ -297,9 +264,15 @@
 
 /* ========== ОЧЕНЬ МАЛЕНЬКИЕ ТЕЛЕФОНЫ (до 480px) ========== */
 @media (max-width: 480px) {
+  .register-header {
+    padding: 12px 15px;
+  }
+
+  .register-content {
+    padding: 65px 12px 25px;
+  }
+
   .register-container {
-    width: 300px;
-    max-width: 340px;
     padding: 20px 16px;
   }
 
@@ -321,12 +294,7 @@
     padding: 8px 0 8px 12px;
   }
 
-  .register-button {
-    font-size: 15px;
-    padding: 8px 0;
-  }
-
-  .register-error-message {
+  .error-message {
     font-size: 10px;
     padding: 3px 8px;
   }
@@ -334,25 +302,5 @@
   .exit-btn {
     padding: 5px 10px;
     font-size: 11px;
-  }
-}
-
-/* ========== ВЫСОКИЕ ЭКРАНЫ НА МОБИЛКЕ ========== */
-@media (max-width: 767px) and (min-height: 800px) {
-  .register-content {
-    width: 500px;
-    align-items: center;
-  }
-  
-  .register-container {
-    margin: 5px;
-    width: 95%;
-  }
-}
-
-@media (max-width: 767px) and (min-height: 900px) {
-  .register-container {
-    margin: 5px;
-    width: 95%;
   }
 }

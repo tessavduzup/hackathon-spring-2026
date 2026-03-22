@@ -30,8 +30,6 @@
   border: 2px solid transparent;
   outline: none;
   transition: all 0.2s;
-  font-family: 'Rostelecom Basis', sans-serif;
-  font-weight: 300;
 }
 
 /* Поля ввода - состояние ошибки */
@@ -39,4 +37,23 @@
   border: 2px solid;
   border-color: #FF4444;
   background: #FFF0F0;
+}
+
+/* Сообщения об ошибках */
+.error-message {
+  color: #d90707;
+  margin-top: 4px;
+  margin-bottom: 0;
+  text-align: left;
+  background: rgba(255, 142, 142, 0.7);
+  padding: 4px 10px;
+  border-radius: 6px;
+  border-left: 3px solid #d90707;
+  width: 100%;
+  backdrop-filter: blur(4px);
+  opacity: 1;
+}
+
+.error-message:empty {
+  display: none;
 }
